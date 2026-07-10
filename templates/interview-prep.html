@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+{% set active_page = "interview" %}
+{% block title %}Interview Prep | AI Career Coach{% endblock %}
+
+{% block content %}
+<section id="interview-view" class="view-section active glass-panel">
+    <h2>Interview Preparation</h2>
+    <p class="terminal-text">Define the target role to generate custom technical and behavioral interview simulations.</p>
+    <input type="text" class="tech-input" placeholder="> e.g., Cloud Architect, Junior Frontend Developer">
+    <button class="action-btn">Start Simulation</button>
+</section>
+{% endblock %}
