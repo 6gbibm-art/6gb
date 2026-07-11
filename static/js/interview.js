@@ -5,7 +5,7 @@ function initInterviewPrep() {
     const input = document.getElementById("role-title");
     const button = document.getElementById("start-interview-btn");
     const results = document.getElementById("interview-results");
-
+    
     if (!input || !button || !results) return;
 
     button.addEventListener("click", async () => {
@@ -28,7 +28,7 @@ function initInterviewPrep() {
 
         const formData = new FormData();
         formData.append("role_title", role);
-
+        let markdown = "";
         try {
 
             const response = await fetch("/api/start-interview", {
@@ -43,6 +43,8 @@ function initInterviewPrep() {
             const decoder = new TextDecoder();
 
             results.innerHTML = "";
+
+            let markdown = "";
 
             while (true) {
 
@@ -61,13 +63,17 @@ function initInterviewPrep() {
                     const data = line.substring(6);
 
                     if (data === "[DONE]") {
+
+                        // Render ONCE
+                        results.innerHTML = marked.parse(markdown);
+
                         button.disabled = false;
                         button.innerText = "Start Simulation";
+
                         return;
                     }
 
-                    results.innerHTML += data;
-                    results.scrollTop = results.scrollHeight;
+                    markdown += data;
                 }
             }
 

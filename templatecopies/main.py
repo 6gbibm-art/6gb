@@ -92,8 +92,7 @@ async def analyze_resume(file: UploadFile = File(...)):
             for chunk in response:
                 if chunk.text:
                     # Replace newlines with HTML breaks for the frontend UI
-                    text_chunk = chunk.text.replace("\n", "<br>") 
-                    yield f"data: {text_chunk}\n\n"
+                    yield f"data: {chunk.text}\n\n"
             yield "data: [DONE]\n\n"
 
         return StreamingResponse(generate(), media_type="text/event-stream")
@@ -123,8 +122,7 @@ async def generate_cover_letter(job_description: str = Form(...)):
             )
             for chunk in response:
                 if chunk.text:
-                    text_chunk = chunk.text.replace("\n", "<br>")
-                    yield f"data: {text_chunk}\n\n"
+                    yield f"data: {chunk.text}\n\n"
             yield "data: [DONE]\n\n"
 
         return StreamingResponse(generate(), media_type="text/event-stream")
@@ -138,12 +136,127 @@ async def start_interview(role_title: str = Form(...)):
     """Streams interview questions and a roadmap based on the target role."""
     try:
         prompt = f"""
-        You are a hiring manager interviewing a candidate for the role of: {role_title}.
-        Generate 3 highly technical interview questions specific to this role, 
-        followed by 2 behavioral questions, and a brief 3-step roadmap on how to prepare. 
-        Also provide answers to the questions in pointers and highlight the keywords a candidate should put emphasis on.
-        Format this cleanly in a professional manner with pointers explaining on how to approach the answer.
-        """
+You are a Senior Hiring Manager and Technical Interviewer at a top technology company.
+
+The candidate is preparing for the following role:
+
+ROLE: {role_title}
+
+Generate a professional interview preparation guide in VALID MARKDOWN.
+
+## Formatting Rules
+- Return ONLY Markdown.
+- Do NOT wrap the response inside triple backticks (```).
+- Do NOT return HTML.
+- Do NOT use tables.
+- Do NOT use emojis.
+- Do NOT use horizontal separators (---).
+- Use proper Markdown headings (#, ##, ###).
+- Use bullet points (-) and numbered lists.
+- Use **bold** for important terms.
+- Use `inline code` for technologies, SQL keywords, commands, functions, libraries, and syntax.
+
+The response MUST follow this exact structure:
+
+# Interview Guide: {role_title}
+
+A short introduction (2-3 sentences) explaining what interviewers evaluate for this role.
+
+## Technical Interview Questions
+
+Generate EXACTLY 3 highly relevant technical questions.
+
+For EACH question include:
+
+### Question X: <Title>
+
+**Question**
+
+The interview question.
+
+**Key Topics**
+
+- Topic 1
+- Topic 2
+- Topic 3
+
+**How to Approach**
+
+Provide 3-5 bullet points explaining how the candidate should think about solving the problem.
+
+**Sample Answer**
+
+Provide a concise but high-quality answer in bullet points.
+
+**Common Mistakes**
+
+Mention 2-3 mistakes candidates usually make.
+
+---
+
+## Behavioral Interview Questions
+
+Generate EXACTLY 2 behavioral questions.
+
+For EACH question include:
+
+### Question X: <Title>
+
+**Question**
+
+...
+
+**What the interviewer is evaluating**
+
+- ...
+
+**How to structure your answer**
+
+Explain how to answer using the STAR method.
+
+**Example Talking Points**
+
+Provide bullet points instead of a full scripted answer.
+
+---
+
+## 3-Step Preparation Roadmap
+
+Provide exactly three numbered preparation steps.
+
+For each step include:
+
+### Step X
+
+**Goal**
+
+...
+
+**Tasks**
+
+- ...
+- ...
+- ...
+
+---
+
+## Interview Tips
+
+Provide 5 practical interview tips.
+
+---
+
+## Final Advice
+
+End with one short paragraph encouraging the candidate to focus on communication, problem solving, and structured thinking.
+
+The guide should be:
+- Professional
+- Detailed
+- Easy to read
+- Suitable for FAANG-level interviews
+- Tailored specifically for the role: {role_title}
+"""
 
         async def generate():
             response = client.models.generate_content_stream(
@@ -152,8 +265,7 @@ async def start_interview(role_title: str = Form(...)):
             )
             for chunk in response:
                 if chunk.text:
-                    text_chunk = chunk.text.replace("\n", "<br>")
-                    yield f"data: {text_chunk}\n\n"
+                    yield f"data: {chunk.text}\n\n"
             yield "data: [DONE]\n\n"
 
         return StreamingResponse(generate(), media_type="text/event-stream")
