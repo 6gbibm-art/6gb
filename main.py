@@ -19,7 +19,7 @@ if not GEMINI_API_KEY:
 client = genai.Client(api_key=GEMINI_API_KEY)
 
 # Note: Make sure this is a valid model name! (e.g., 'gemini-2.5-flash' or 'gemini-1.5-flash')
-MODEL_NAME = 'gemini-2.5-flash' 
+MODEL_NAME = 'gemini-3.1-flash-lite' 
 
 # 3. Initialize FastAPI
 app = FastAPI(title="AI Career Coach API")
@@ -27,29 +27,36 @@ app = FastAPI(title="AI Career Coach API")
 # 4. Mount Static Files & Templates
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
-
+def render_template(template_name: str, request: Request, **context):
+    """Simulates Flask's render_template for FastAPI."""
+    return templates.TemplateResponse(
+        request=request,
+        name=template_name,
+        context=context
+    )
 
 # --- PAGE ROUTES (HTML Rendering) ---
 
 @app.get("/")
+@app.get("/dashboard")
 async def serve_dashboard(request: Request):
     # This correctly points to the templates folder and looks for dashboard.html
-    return templates.TemplateResponse("dashboard.html", {"request": request})
+    return render_template("dashboard.html", request)
 
 @app.get("/resume")
 async def serve_resume_analyzer(request: Request):
     """Renders the ATS Analyzer template."""
-    return templates.TemplateResponse("resume-analyzer.html", {"request": request})
+    return render_template("resume-analyzer.html", request)
 
 @app.get("/cover-letter")
 async def serve_cover_letter(request: Request):
     """Renders the Cover Letter generator template."""
-    return templates.TemplateResponse("cover-letter.html", {"request": request})
+    return render_template("cover-letter.html", request)
 
-@app.get("/interview")
+@app.get("/interview-prep")
 async def serve_interview_prep(request: Request):
     """Renders the Interview Prep template."""
-    return templates.TemplateResponse("interview-prep.html", {"request": request})
+    return render_template("interview-prep.html", request)
 
 
 # --- API ROUTES (AI Processing) ---
@@ -93,7 +100,8 @@ async def analyze_resume(file: UploadFile = File(...)):
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-
+        
+# OUR CODE IS WORKING UNTIL HERE. LETTER GENERATION DOES NOT WORK YET
 
 @app.post("/api/generate-letter")
 async def generate_cover_letter(job_description: str = Form(...)):
@@ -133,7 +141,7 @@ async def start_interview(role_title: str = Form(...)):
         You are a hiring manager interviewing a candidate for the role of: {role_title}.
         Generate 3 highly technical interview questions specific to this role, 
         followed by 2 behavioral questions, and a brief 3-step roadmap on how to prepare.
-        Format this cleanly for a terminal UI.
+        Format this cleanly in a professional manner with pointers explaining on how to approach the answer.
         """
 
         async def generate():
@@ -154,4 +162,4 @@ async def start_interview(role_title: str = Form(...)):
 
 
 if __name__ == "__main__":
-    uvicorn.run("main:app", host="127.0.0.1", port=8080, reload=True)
+    uvicorn.run("main:app", host="0.0.0.0", port=8080, reload=True)

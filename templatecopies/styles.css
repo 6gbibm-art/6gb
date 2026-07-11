@@ -85,14 +85,14 @@
 
     /* --- Main Content Layout --- */
     .container {
-        max-width: 1200px;
-        margin: 2.5rem auto;
+        max-width: 900px;
+        margin: 2rem auto;
         padding: 0 1rem;
     }
 
     .view-section {
         display: none;
-        padding: 3rem;
+        padding: 2.5rem;
         animation: fadeIn 0.4s ease-out;
     }
 
@@ -207,7 +207,7 @@
 
     .grid-card {
         flex: 1;
-        height: 300px; /* Increased from 180px to properly fit the content */
+        height: 260px; /* Increased from 180px to properly fit the content */
         background: transparent;
         perspective: 1000px;
         cursor: pointer;
@@ -403,77 +403,3 @@
     header .logo:hover {
         color: var(--neon-cyan);
     }
-
-/* ============================================================
-   GLOBAL AI OUTPUT PANEL
-   ============================================================ */
-
-.results-panel{
-    display:none;
-    margin-top:2rem;
-    padding:2rem;
-    border-radius:10px;
-    border:1px solid rgba(0,240,255,.25);
-    background:rgba(0,0,0,.35);
-    font-family:var(--font-mono);
-    line-height:1.8;
-    color:var(--text-main);
-
-    /* Let the page scroll instead of nesting scrollbars */
-    overflow:visible;
-    max-height:none;
-    min-height:300px;
-
-    white-space:normal;
-    word-wrap:break-word;
-}
-
-.results-panel h1,
-.results-panel h2,
-.results-panel h3{
-    color:var(--neon-cyan);
-    margin:1.5rem 0 .75rem;
-}
-
-.results-panel hr{
-    border:none;
-    border-top:1px solid rgba(0,240,255,.2);
-    margin:1.5rem 0;
-}
-
-.results-panel ul,
-.results-panel ol{
-    margin-left:1.5rem;
-}
-
-.results-panel p{
-    margin:.75rem 0;
-}
-
-.view-section{
-    transition:all .3s ease;
-}
-
-.tech-input{
-    font-size:1rem;
-}
-
-.action-btn{
-    min-width:220px;
-}
-
-@media (max-width:768px){
-
-    .container{
-        max-width:95%;
-    }
-
-    .view-section{
-        padding:1.5rem;
-    }
-
-    .results-panel{
-        padding:1.25rem;
-        min-height:220px;
-    }
-}

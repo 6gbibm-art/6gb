@@ -1,3 +1,12 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}AI Career Coach | System Terminal{% endblock %}</title>
+    
+    <!-- <link rel="stylesheet" href="{{ url_for('static', path='styles.css') }}"> -->
+    <style>
     /* --- Core Variables --- */
     :root {
         --bg-dark: #0a0e17;
@@ -16,6 +25,7 @@
         margin: 0;
         padding: 0;
     }
+
     body {
         background-color: var(--bg-dark);
         color: var(--text-main);
@@ -25,7 +35,7 @@
             radial-gradient(circle at 85% 30%, rgba(0, 240, 255, 0.04), transparent 25%);
         min-height: 100vh;
     }
-    
+
     /* --- Reusable Glass & Tech Classes --- */
     .glass-panel {
         background: var(--panel-bg);
@@ -42,6 +52,20 @@
         margin-bottom: 1.5rem;
     }
     
+    .logo {
+    font-family: var(--font-mono);
+    font-size: 1.2rem;
+    font-weight: bold;
+    letter-spacing: 1px;
+    color: var(--text-main);
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    }
+
+    .logo:hover {
+        color: var(--neon-cyan);
+    }
     .neon-text {
         color: var(--neon-cyan);
         text-shadow: 0 0 8px var(--neon-cyan-dim);
@@ -56,6 +80,12 @@
         margin: 1rem;
     }
 
+    .logo {
+        font-family: var(--font-mono);
+        font-size: 1.2rem;
+        font-weight: bold;
+        letter-spacing: 1px;
+    }
 
     /* --- Header & Navigation --- */
     nav a {
@@ -85,14 +115,14 @@
 
     /* --- Main Content Layout --- */
     .container {
-        max-width: 1200px;
-        margin: 2.5rem auto;
+        max-width: 900px;
+        margin: 2rem auto;
         padding: 0 1rem;
     }
 
     .view-section {
         display: none;
-        padding: 3rem;
+        padding: 2.5rem;
         animation: fadeIn 0.4s ease-out;
     }
 
@@ -207,7 +237,7 @@
 
     .grid-card {
         flex: 1;
-        height: 300px; /* Increased from 180px to properly fit the content */
+        height: 260px; /* Increased from 180px to properly fit the content */
         background: transparent;
         perspective: 1000px;
         cursor: pointer;
@@ -386,94 +416,27 @@
         .tech-input {
             padding: 0.8rem;
         }
-    
     }
-    header .logo,
-    header .logo:visited {
-        font-family: var(--font-mono);
-        font-size: 1.2rem;
-        font-weight: bold;
-        letter-spacing: 1px;
-        color: var(--text-main);
-        text-decoration: none;
-        cursor: pointer;
-        transition: color 0.3s ease;
-    }
+    </style>
+</head>
+<body>
 
-    header .logo:hover {
-        color: var(--neon-cyan);
-    }
+    <header class="glass-panel">
+        <a href="/dashboard" class="logo">
+    Nextstep AI
+        </a>
+        <nav>
+            <a href="/dashboard" class="nav-btn {% if active_page == 'dashboard' %}active{% endif %}">Home</a>
+            <a href="/resume" class="nav-btn {% if active_page == 'resume' %}active{% endif %}">ATS Analyzer</a>
+            <a href="/cover-letter" class="nav-btn {% if active_page == 'cover-letter' %}active{% endif %}">Cover Letters</a>
+            <a href="/interview-prep" class="nav-btn {% if active_page == 'interview-prep' %}active{% endif %}">Interview Prep</a>
+        </nav>
+    </header>
 
-/* ============================================================
-   GLOBAL AI OUTPUT PANEL
-   ============================================================ */
+    <main class="container">
+        {% block main %}{% endblock %}
+    </main>
 
-.results-panel{
-    display:none;
-    margin-top:2rem;
-    padding:2rem;
-    border-radius:10px;
-    border:1px solid rgba(0,240,255,.25);
-    background:rgba(0,0,0,.35);
-    font-family:var(--font-mono);
-    line-height:1.8;
-    color:var(--text-main);
-
-    /* Let the page scroll instead of nesting scrollbars */
-    overflow:visible;
-    max-height:none;
-    min-height:300px;
-
-    white-space:normal;
-    word-wrap:break-word;
-}
-
-.results-panel h1,
-.results-panel h2,
-.results-panel h3{
-    color:var(--neon-cyan);
-    margin:1.5rem 0 .75rem;
-}
-
-.results-panel hr{
-    border:none;
-    border-top:1px solid rgba(0,240,255,.2);
-    margin:1.5rem 0;
-}
-
-.results-panel ul,
-.results-panel ol{
-    margin-left:1.5rem;
-}
-
-.results-panel p{
-    margin:.75rem 0;
-}
-
-.view-section{
-    transition:all .3s ease;
-}
-
-.tech-input{
-    font-size:1rem;
-}
-
-.action-btn{
-    min-width:220px;
-}
-
-@media (max-width:768px){
-
-    .container{
-        max-width:95%;
-    }
-
-    .view-section{
-        padding:1.5rem;
-    }
-
-    .results-panel{
-        padding:1.25rem;
-        min-height:220px;
-    }
-}
+    <script src="/static/script.js"></script>
+</body>
+</html>

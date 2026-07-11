@@ -2,11 +2,24 @@
 {% set active_page = "cover-letter" %}
 {% block title %}Cover Letters | AI Career Coach{% endblock %}
 
-{% block content %}
+{% block main %}
 <section id="cover-letter-view" class="view-section active glass-panel">
     <h2>Cover Letter Generator</h2>
+
     <p class="terminal-text">Input target job description parameters to synthesize a tailored cover letter.</p>
-    <textarea class="tech-input" placeholder="> Paste Job Description parameters here..."></textarea>
-    <button class="action-btn">Generate Cover Letter</button>
+
+    <textarea
+        id="job-description"
+        class="tech-input"
+        placeholder="> Paste Job Description parameters here..."></textarea>
+
+    <button id="generate-letter-btn" class="action-btn">Generate Cover Letter</button>
+    <div id="cover-letter-results"
+         class="terminal-text"
+         style="display:none; border:1px solid rgba(0,240,255,.3); padding:1.5rem; margin-top:1.5rem; background:rgba(0,0,0,.4); border-radius:6px; line-height:1.6; max-height:400px; overflow-y:auto;">
+    </div>
 </section>
+{% endblock %}
+{% block scripts %}
+<script src="/static/js/letter.js"></script>
 {% endblock %}
