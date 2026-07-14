@@ -1,5 +1,5 @@
 import os
-import PyPDF2
+import pymupdf
 import uvicorn
 from google import genai
 from fastapi import FastAPI, File, UploadFile, HTTPException, Request, Form
@@ -68,8 +68,14 @@ async def analyze_resume(file: UploadFile = File(...)):
         raise HTTPException(status_code=400, detail="Only PDF files are accepted.")
 
     try:
-        pdf_reader = PyPDF2.PdfReader(file.file)
-        resume_text = "".join([page.extract_text() or "" for page in pdf_reader.pages])
+        pdf_bytes = await file.read()
+
+        doc = pymupdf.open(stream=pdf_bytes, filetype="pdf")
+
+        resume_text = ""
+
+        for page in doc:
+            resume_text += page.get_text()
 
         if not resume_text.strip():
             raise HTTPException(status_code=400, detail="Could not extract text from the PDF.")
@@ -122,6 +128,13 @@ async def generate_cover_letter(job_description: str = Form(...), skill_set: str
         {job_description}
         Skill Set:
         {skill_set}
+        - Return PLAIN TEXT ONLY.
+        - DO NOT use Markdown.
+        - DO NOT use headings with #.
+        - DO NOT use *, -, **, or bullet symbols.
+        - DO NOT use code blocks.
+        - Use numbered sections and blank lines for readability.
+        - Keep the language professional and concise.
         """
 
         async def generate():
@@ -146,17 +159,40 @@ async def start_interview(role_title: str = Form(...)):
     """Streams interview questions and a roadmap based on the target role."""
     try:
         prompt = f"""
-You are a Senior Engineering Manager and Principal Cloud Architect responsible for interviewing candidates.
+You are a senior interviewer.
 
-The candidate is preparing for the following role:
+Create an interview guide for the role: {role_title}.
 
-Role:
-{role_title}
+Output plain text only.
+Do not use Markdown, #, *, -, tables, or code blocks.
 
-Generate a comprehensive interview preparation guide.
+Include:
 
-Requirements:
+Interview Guide: <Role>
 
+Brief introduction (2 sentences).
+
+Part 1: Technical Questions
+Generate 5 role-specific technical questions.
+For each:
+Question:
+Keywords:
+How to answer (3-5 concise points).
+
+Part 2: Behavioral Questions
+Generate 2 behavioral questions.
+For each:
+Question:
+What the interviewer evaluates:
+Suggested STAR approach.
+
+Part 3: Preparation Roadmap
+Provide 5 preparation steps with a short explanation.
+
+Part 4: Final Tips
+Provide 5 concise interview tips.
+
+Keep the response concise, professional, and under 1000 words.
 - Return PLAIN TEXT ONLY.
 - DO NOT use Markdown.
 - DO NOT use headings with #.
@@ -164,105 +200,7 @@ Requirements:
 - DO NOT use code blocks.
 - Use numbered sections and blank lines for readability.
 - Keep the language professional and concise.
-
-Use the following structure exactly:
-
-==================================================
-Interview Guide: <Role Name>
-==================================================
-
-Introduction
-Write a short 2-3 sentence introduction describing what this interview will focus on.
-
-Part 1: Technical Interview Questions
-
-Generate 5 technical interview questions.
-
-For EACH question include:
-
-Question 1:
-<question>
-
-Why this is asked:
-<1-2 sentences>
-
-Key Topics:
-Comma-separated keywords
-
-How to Answer:
-1. ...
-2. ...
-3. ...
-
-Example Talking Points:
-1. ...
-2. ...
-3. ...
-
-Difficulty:
-Easy / Medium / Hard
-
-
-Part 2: Behavioral Interview Questions
-
-Generate 2 behavioral questions.
-
-For EACH question include:
-
-Question:
-...
-
-What the interviewer is evaluating:
-...
-
-Suggested STAR Framework:
-Situation:
-Task:
-Action:
-Result:
-
-
-Part 3: Preparation Roadmap
-
-Create a practical 5-step preparation roadmap.
-
-For each step include:
-
-Step 1
-Objective:
-Resources to Study:
-Expected Outcome:
-
-Step 2
-...
-
-Part 4: Common Mistakes
-
-List 5 mistakes candidates commonly make during interviews for this role.
-
-Explain briefly why each mistake is harmful.
-
-
-Part 5: Final Tips
-
-Provide 5 practical interview tips that would improve the candidate's chances.
-
-Formatting Rules:
-
-Use only plain text.
-
-Separate sections with a blank line.
-
-Number everything.
-
-Never output:
-
-#
-##
-###
-*
--
-** """
+"""
 
         async def generate():
             response = client.models.generate_content_stream(
