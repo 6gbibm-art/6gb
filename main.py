@@ -15,6 +15,7 @@ import io
 from Prompts.cover_letter_prompt import get_cover_letter_prompt
 from Prompts.ats_prompt import get_ats_prompt
 from Prompts.interview_prep import get_interview_prompt
+from fastapi.responses import JSONResponse
 
 # 1. Load Environment Variables securely
 load_dotenv()
@@ -108,22 +109,22 @@ async def analyze_resume(file: UploadFile = File(...)):
         
 
 @app.post("/api/generate-letter")
-async def generate_cover_letter(job_description: str = Form(...), skill_set: str = Form(...)):
+async def generate_cover_letter(
+    job_description: str = Form(...),
+    skill_set: str = Form(...)
+        ):
     try:
-        prompt = get_cover_letter_prompt(job_description,skill_set)
+        prompt = get_cover_letter_prompt(job_description, skill_set)
 
-        async def generate():
-            response = client.models.generate_content_stream(
-                model=MODEL_NAME,
-                contents=prompt
-            )
-            for chunk in response:
-                if chunk.text:
-                    yield f"data: {chunk.text}\n\n"
-            yield "data: [DONE]\n\n"
+        response = client.models.generate_content(
+            model=MODEL_NAME,
+            contents=prompt
+        )
 
-        return StreamingResponse(generate(), media_type="text/event-stream")
-        
+        return JSONResponse({
+            "letter": response.text
+        })
+
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 @app.post("/api/download-docx")

@@ -24,134 +24,78 @@ function initCoverLetterGenerator() {
 
     async function generateLetter() {
 
-        const jobDescription = jobTextarea.value.trim();
+    const jobDescription = jobTextarea.value.trim();
+    const skills = getSelectedSkills();
 
-        const skills = getSelectedSkills();
-
-        if (!jobDescription) {
-
-            results.style.display = "block";
-
-            results.innerHTML =
-                "<span style='color:#ff5555;'>Please enter a job description.</span>";
-
-            return;
-
-        }
-
-        if (skills.length === 0) {
-
-            results.style.display = "block";
-
-            results.innerHTML =
-                "<span style='color:#ff5555;'>Please select at least one skill.</span>";
-
-            return;
-
-        }
-
-        generatedLetter = "";
-
-        actions.style.display = "none";
-
-        generateBtn.disabled = true;
-
-        generateBtn.innerText = "Generating...";
+    if (!jobDescription) {
 
         results.style.display = "block";
-
         results.innerHTML =
-            "> Connecting to AI...<br><br>";
-
-        const formData = new FormData();
-
-        formData.append("job_description", jobDescription);
-
-        formData.append(
-            "skill_set",
-            skills.join(", ")
-        );
-
-        try {
-
-            const response = await fetch("/api/generate-letter", {
-
-                method: "POST",
-
-                body: formData
-
-            });
-
-            if (!response.ok)
-                throw new Error("Server communication failed.");
-
-            const reader = response.body.getReader();
-
-            const decoder = new TextDecoder();
-
-            generatedLetter = "";
-
-            results.innerHTML = "";
-
-            while (true) {
-                const { done, value } = await reader.read();
-                
-                if (done) break;
-                
-                const chunk = decoder.decode(value, { stream: true });
-                
-                const lines = chunk.split("\n");
-                console.log(JSON.stringify(chunk));
-                
-                for (const line of lines) {
-                    
-                    if (!line.startsWith("data: "))
-                        continue;
-
-                    const data = line.substring(6);
-
-                    if (data === "[DONE]") {
-
-                        actions.style.display = "flex";
-
-                        generateBtn.disabled = false;
-
-                        generateBtn.innerText = "Generate Cover Letter";
-
-                        return;
-
-                    }
-
-                    generatedLetter += data;
-
-                    results.innerHTML =
-                        generatedLetter
-                            .replace(/\n/g, "<br>");
-
-                    results.scrollTop = results.scrollHeight;
-
-                }
-
-            }
-
-        }
-
-        catch (err) {
-
-            results.innerHTML =
-                `<span style="color:#ff5555;">${err.message}</span>`;
-
-        }
-
-        finally {
-
-            generateBtn.disabled = false;
-
-            generateBtn.innerText = "Generate Cover Letter";
-
-        }
+            "<span style='color:#ff5555;'>Please enter a job description.</span>";
+        return;
 
     }
+
+    if (skills.length === 0) {
+
+        results.style.display = "block";
+        results.innerHTML =
+            "<span style='color:#ff5555;'>Please select at least one skill.</span>";
+        return;
+
+    }
+
+    generatedLetter = "";
+
+    actions.style.display = "none";
+
+    generateBtn.disabled = true;
+    generateBtn.innerText = "Generating...";
+
+    results.style.display = "block";
+    results.innerHTML = "> Connecting to AI...";
+
+    const formData = new FormData();
+
+    formData.append("job_description", jobDescription);
+    formData.append("skill_set", skills.join(", "));
+
+    try {
+
+        const response = await fetch("/api/generate-letter", {
+            method: "POST",
+            body: formData
+        });
+
+        if (!response.ok)
+            throw new Error("Server communication failed.");
+
+        const data = await response.json();
+
+        generatedLetter = data.letter;
+
+        results.innerHTML =
+            generatedLetter.replace(/\n/g, "<br>");
+
+        actions.style.display = "flex";
+
+    }
+
+    catch (err) {
+
+        results.innerHTML =
+            `<span style="color:#ff5555;">${err.message}</span>`;
+
+    }
+
+    finally {
+
+        generateBtn.disabled = false;
+        generateBtn.innerText = "Generate Cover Letter";
+
+    }
+
+}
 
     generateBtn.addEventListener("click", generateLetter);
 
