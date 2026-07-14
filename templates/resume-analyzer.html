@@ -4,23 +4,63 @@
 
 {% block main %}
 <section id="resume-view" class="view-section active glass-panel">
-    <h2>ATS Resume Analyzer</h2>
-    <p class="terminal-text">Upload your PDF resume to execute ATS evaluation algorithms and identify critical skill gaps.</p>
-    
-    <!-- 1. SAFELY OUTSIDE: Moved the hidden input out of the dropzone box -->
-    <input type="file" id="resume-upload" accept="application/pdf" style="display: none;">
 
-    <!-- 2. INTERACTIVE CONTAINER: Purely handles layout clicks and visual cues -->
-    <div class="dropzone" id="dropzone" onclick="document.getElementById('resume-upload').click();">
-        <p id="dropzone-text">> Drag & Drop your Resume (PDF) here</p>
-        <p class="sub-text">or click to browse local files</p>
+    <h2>ATS Resume Analyzer</h2>
+
+    <p class="terminal-text">
+        Upload your PDF resume to execute ATS evaluation algorithms and identify critical skill gaps.
+    </p>
+
+    <input
+        type="file"
+        id="resume-upload"
+        accept="application/pdf"
+        style="display:none;">
+
+    <div
+        class="dropzone"
+        id="dropzone"
+        onclick="document.getElementById('resume-upload').click();">
+
+        <p id="dropzone-text">
+            > Drag & Drop your Resume (PDF) here
+        </p>
+
+        <p class="sub-text">
+            or click to browse local files
+        </p>
+
     </div>
-    
-    <button class="action-btn" id="analyze-btn" disabled>Initialize Analysis</button>
-    <div id="analysis-results" class="terminal-text" style="display: none; border: 1px solid rgba(0, 240, 255, 0.3); padding: 1.5rem; margin-top: 1.5rem; background: rgba(0,0,0,0.4); border-radius: 6px; line-height: 1.6; max-height: 400px; overflow-y: auto;">
+
+    <button
+        id="analyze-btn"
+        class="action-btn"
+        disabled>
+
+        Initialize Analysis
+
+    </button>
+
+    <div
+        id="analysis-results"
+        class="terminal-text"
+        style="
+            display:none;
+            border:1px solid rgba(0,240,255,.3);
+            padding:1.5rem;
+            margin-top:1.5rem;
+            background:rgba(0,0,0,.4);
+            border-radius:6px;
+            line-height:1.6;
+            max-height:450px;
+            overflow-y:auto;
+            white-space:pre-wrap;
+        ">
     </div>
+
 </section>
 {% endblock %}
+
 {% block scripts %}
 <script src="/static/js/ats.js"></script>
 {% endblock %}

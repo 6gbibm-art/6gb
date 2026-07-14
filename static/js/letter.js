@@ -103,7 +103,7 @@ function initCoverLetterGenerator() {
 
         results.style.display = "block";
 
-        results.innerHTML = "> Connecting to AI...";
+        results.innerHTML = "> Generating Cover Letter...";
 
         const formData = new FormData();
 

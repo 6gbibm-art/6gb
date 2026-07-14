@@ -37,7 +37,8 @@
 
     .terminal-text {
         font-family: var(--font-mono);
-        color: var(--text-muted);
+        color:#ffffff;
+        /* color: var(--text-muted); */
         font-size: 0.9rem;
         margin-bottom: 1.5rem;
     }
@@ -172,32 +173,54 @@
         box-shadow: 0 0 10px var(--neon-cyan-dim);
     }
 
-    .action-btn {
-        margin-top: 1.5rem;
-        background: var(--neon-cyan);
-        color: var(--bg-dark);
-        border: none;
-        padding: 0.8rem 1.5rem;
-        font-family: var(--font-mono);
-        font-weight: bold;
-        cursor: pointer;
-        border-radius: 4px;
-        transition: all 0.2s;
-        text-transform: uppercase;
-        letter-spacing: 1px;
+    .action-btn{
+
+        margin-top:24px;
+
+        min-width:220px;
+        height:46px;
+
+        display:inline-flex;
+        align-items:center;
+        justify-content:center;
+
+        background:var(--neon-cyan);
+
+        color:var(--bg-dark);
+
+        border:none;
+
+        border-radius:4px;
+
+        cursor:pointer;
+
+        font-family:var(--font-mono);
+        font-weight:bold;
+
+        letter-spacing:1px;
+        text-transform:uppercase;
+
+        transition:.25s;
     }
 
-    .action-btn:hover {
-        box-shadow: 0 0 15px var(--neon-cyan);
-        transform: translateY(-2px);
+    .action-btn:hover{
+
+        box-shadow:0 0 15px rgba(0,240,255,.45);
+
+        transform:translateY(-2px);
     }
 
-    .action-btn:disabled {
-        background: #333;
-        color: #666;
-        cursor: not-allowed;
-        box-shadow: none;
-        transform: none;
+    .action-btn:disabled{
+
+        background:#3b3b3b;
+
+        color:#7d7d7d;
+
+        cursor:not-allowed;
+
+        transform:none;
+
+        box-shadow:none;
     }
     /* --- Updated Grid Card Typography --- */
     /* --- 3D Flip Grid Cards --- */
@@ -408,54 +431,110 @@
     }
 
 /* ============================================================
-   GLOBAL AI OUTPUT PANEL
-   ============================================================ */
+   SHARED AI OUTPUT PANEL
+   Used by:
+   - ATS Resume Analyzer
+   - Cover Letter Generator
+   - Interview Preparation
+============================================================ */
 
 .results-panel{
     display:none;
-    margin-top:2rem;
-    padding:2rem;
-    border-radius:10px;
+
+    margin-top:24px;
+    padding:24px;
+
+    background:#070b12;
     border:1px solid rgba(0,240,255,.25);
-    background:rgba(0,0,0,.35);
+    border-radius:8px;
 
     color:var(--text-main);
 
-    overflow:visible;
-    max-height:none;
-    min-height:300px;
+    min-height:220px;
+    max-height:650px;
+    overflow-y:auto;
 
-    white-space:normal;
-    word-wrap:break-word;
+    white-space:pre-wrap;
+    word-break:break-word;
+    overflow-wrap:anywhere;
 
-    /* NEW */
-    font-family: var(--font-sys);
-    font-size:.96rem;
-    line-height:1.65;
+    font-family:var(--font-mono);
+    font-size:.97rem;
+    line-height:1.8;
+
+    transition:.25s ease;
 }
+
+/* Rich text support (future-proof) */
 
 .results-panel h1,
 .results-panel h2,
 .results-panel h3{
     color:var(--neon-cyan);
-    margin:1.5rem 0 .75rem;
+    margin:1.25rem 0 .75rem;
 }
-.results-panel code{
-    font-size:.92rem;
+
+.results-panel h1{
+    font-size:1.45rem;
 }
-.results-panel hr{
-    border:none;
-    border-top:1px solid rgba(0,240,255,.2);
-    margin:2rem 0;
+
+.results-panel h2{
+    font-size:1.2rem;
+}
+
+.results-panel h3{
+    font-size:1.05rem;
+}
+
+.results-panel p{
+    margin:.8rem 0;
 }
 
 .results-panel ul,
 .results-panel ol{
     margin-left:1.5rem;
+    line-height:1.8;
 }
 
-.results-panel p{
-    margin:.75rem 0;
+.results-panel strong{
+    color:#ffffff;
+}
+
+.results-panel code{
+    background:#111827;
+    color:var(--neon-cyan);
+    padding:2px 6px;
+    border-radius:4px;
+}
+.ai-status{
+
+    display:flex;
+    align-items:center;
+
+    min-height:72px;
+
+    margin-top:24px;
+    margin-bottom:0;
+
+    padding:22px 24px;
+
+    border-radius:8px;
+
+    border:1px solid rgba(0,240,255,.25);
+
+    background:#070b12;
+
+    font-family:var(--font-mono);
+    font-size:.95rem;
+
+    color:var(--text-main);
+}
+
+.ai-status .neon-text{
+
+    color:var(--neon-cyan);
+
+    text-shadow:0 0 8px rgba(0,240,255,.25);
 }
 
 .view-section{
@@ -463,46 +542,6 @@
 }
 
 
-.action-btn{
-    min-width:220px;
-}
-.results-panel h1{
-    font-size:1.45rem;
-    margin:0 0 1rem;
-    color:var(--neon-cyan);
-}
-
-.results-panel h2{
-    font-size:1.2rem;
-    margin:1.6rem 0 .75rem;
-    color:var(--neon-cyan);
-}
-
-.results-panel h3{
-    font-size:1.05rem;
-    margin:1.2rem 0 .5rem;
-    color:#7ffcff;
-}
-.results-panel ul,
-.results-panel ol{
-    padding-left:1.5rem;
-    line-height:1.8;
-}
-
-.results-panel p{
-    margin:.75rem 0;
-}
-
-.results-panel code{
-    background:#111827;
-    color:#00f0ff;
-    padding:2px 6px;
-    border-radius:4px;
-}
-
-.results-panel strong{
-    color:white;
-}
 @media (max-width:768px){
 
     .container{
@@ -722,4 +761,10 @@
 /* Corner */
 ::-webkit-scrollbar-corner{
     background:#0d1320;
+}
+#analysis-results {
+    white-space: pre-wrap;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    font-family: Consolas, "Courier New", monospace;
 }

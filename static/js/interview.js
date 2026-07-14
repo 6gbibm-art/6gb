@@ -5,7 +5,7 @@ function initInterviewPrep() {
     const input = document.getElementById("role-title");
     const button = document.getElementById("start-interview-btn");
     const results = document.getElementById("interview-results");
-    
+
     if (!input || !button || !results) return;
 
     button.addEventListener("click", async () => {
@@ -13,9 +13,12 @@ function initInterviewPrep() {
         const role = input.value.trim();
 
         if (!role) {
+
             results.style.display = "block";
+
             results.innerHTML =
                 "<span style='color:#ff5555;'>Please enter a target role.</span>";
+
             return;
         }
 
@@ -23,12 +26,13 @@ function initInterviewPrep() {
         button.innerText = "Generating...";
 
         results.style.display = "block";
+
         results.innerHTML =
-            "> Connecting to AI Interview Engine...<br><br>";
+            "> Connecting to AI Interview Engine...";
 
         const formData = new FormData();
         formData.append("role_title", role);
-        let markdown = "";
+
         try {
 
             const response = await fetch("/api/start-interview", {
@@ -39,48 +43,25 @@ function initInterviewPrep() {
             if (!response.ok)
                 throw new Error("Server communication failed.");
 
-            const reader = response.body.getReader();
-            const decoder = new TextDecoder();
+            const data = await response.json();
 
-            results.innerHTML = "";
+            results.innerHTML =
+                data.guide.replace(/\n/g, "<br>");
 
-            let markdown = "";
+        }
 
-            while (true) {
+        catch (err) {
 
-                const { done, value } = await reader.read();
+            results.innerHTML =
+                `<span style="color:#ff5555;">${err.message}</span>`;
 
-                if (done) break;
+        }
 
-                const chunk = decoder.decode(value, { stream: true });
-
-                const lines = chunk.split("\n");
-
-                for (const line of lines) {
-
-                    if (!line.startsWith("data: ")) continue;
-
-                    const data = line.substring(6);
-
-                    if (data === "[DONE]") {
-                        results.innerHTML = marked.parse(markdown);
-                        button.disabled = false;
-                        button.innerText = "Start Simulation";
-
-                        return;
-                    }
-
-                    markdown += data;
-                }
-            }
-
-        } catch (err) {
-
-            results.innerHTML +=
-                `<br><span style="color:#ff5555;">${err.message}</span>`;
+        finally {
 
             button.disabled = false;
             button.innerText = "Start Simulation";
+
         }
 
     });
