@@ -22,90 +22,173 @@ function initCoverLetterGenerator() {
 
     if (!jobTextarea || !generateBtn || !results) return;
 
+    // ==========================================
+    // Auto-growing Job Description textarea
+    // ==========================================
+
+    const MAX_HEIGHT = 260;
+
+    function resizeTextarea() {
+
+        jobTextarea.style.height = "auto";
+
+        jobTextarea.style.height =
+            Math.min(jobTextarea.scrollHeight, MAX_HEIGHT) + "px";
+
+        jobTextarea.style.overflowY =
+            jobTextarea.scrollHeight > MAX_HEIGHT
+                ? "auto"
+                : "hidden";
+    }
+
+    resizeTextarea();
+
+    jobTextarea.addEventListener("input", resizeTextarea);
+
+    // ==========================================
+    // Generate Cover Letter
+    // ==========================================
+
     async function generateLetter() {
 
-    const jobDescription = jobTextarea.value.trim();
-    const skills = getSelectedSkills();
+        const applicantDetails = {
 
-    if (!jobDescription) {
+            name: document.getElementById("user-name").value.trim(),
+
+            email: document.getElementById("user-email").value.trim(),
+
+            phone: document.getElementById("user-phone").value.trim(),
+
+            linkedin: document.getElementById("user-linkedin").value.trim(),
+
+            github: document.getElementById("user-github").value.trim(),
+
+            website: document.getElementById("user-website").value.trim()
+
+        };
+
+        const jobDescription = jobTextarea.value.trim();
+
+        const skills = getSelectedSkills();
+
+        if (!jobDescription) {
+
+            results.style.display = "block";
+
+            results.innerHTML =
+                "<span style='color:#ff5555;'>Please enter a job description.</span>";
+
+            return;
+
+        }
+
+        if (skills.length === 0) {
+
+            results.style.display = "block";
+
+            results.innerHTML =
+                "<span style='color:#ff5555;'>Please select at least one skill.</span>";
+
+            return;
+
+        }
+
+        generatedLetter = "";
+
+        actions.style.display = "none";
+
+        generateBtn.disabled = true;
+
+        generateBtn.innerText = "Generating...";
 
         results.style.display = "block";
-        results.innerHTML =
-            "<span style='color:#ff5555;'>Please enter a job description.</span>";
-        return;
+
+        results.innerHTML = "> Connecting to AI...";
+
+        const formData = new FormData();
+
+        formData.append(
+            "job_description",
+            jobDescription
+        );
+
+        formData.append(
+            "skill_set",
+            skills.join(", ")
+        );
+
+        formData.append(
+            "applicant_details",
+            JSON.stringify(applicantDetails)
+        );
+
+        try {
+
+            const response = await fetch(
+                "/api/generate-letter",
+                {
+                    method: "POST",
+                    body: formData
+                }
+            );
+
+            if (!response.ok)
+                throw new Error("Server communication failed.");
+
+            const data = await response.json();
+
+            generatedLetter = data.letter;
+
+            results.innerHTML =
+                generatedLetter.replace(/\n/g, "<br>");
+
+            actions.style.display = "flex";
+
+        }
+
+        catch (err) {
+
+            results.innerHTML =
+                `<span style="color:#ff5555;">${err.message}</span>`;
+
+        }
+
+        finally {
+
+            generateBtn.disabled = false;
+
+            generateBtn.innerText =
+                "Generate Cover Letter";
+
+        }
 
     }
 
-    if (skills.length === 0) {
+    // ==========================================
+    // Buttons
+    // ==========================================
 
-        results.style.display = "block";
-        results.innerHTML =
-            "<span style='color:#ff5555;'>Please select at least one skill.</span>";
-        return;
+    generateBtn.addEventListener(
+        "click",
+        generateLetter
+    );
 
-    }
+    regenerateBtn.addEventListener(
+        "click",
+        generateLetter
+    );
 
-    generatedLetter = "";
-
-    actions.style.display = "none";
-
-    generateBtn.disabled = true;
-    generateBtn.innerText = "Generating...";
-
-    results.style.display = "block";
-    results.innerHTML = "> Connecting to AI...";
-
-    const formData = new FormData();
-
-    formData.append("job_description", jobDescription);
-    formData.append("skill_set", skills.join(", "));
-
-    try {
-
-        const response = await fetch("/api/generate-letter", {
-            method: "POST",
-            body: formData
-        });
-
-        if (!response.ok)
-            throw new Error("Server communication failed.");
-
-        const data = await response.json();
-
-        generatedLetter = data.letter;
-
-        results.innerHTML =
-            generatedLetter.replace(/\n/g, "<br>");
-
-        actions.style.display = "flex";
-
-    }
-
-    catch (err) {
-
-        results.innerHTML =
-            `<span style="color:#ff5555;">${err.message}</span>`;
-
-    }
-
-    finally {
-
-        generateBtn.disabled = false;
-        generateBtn.innerText = "Generate Cover Letter";
-
-    }
-
-}
-
-    generateBtn.addEventListener("click", generateLetter);
-
-    regenerateBtn.addEventListener("click", generateLetter);
+    // ==========================================
+    // Copy
+    // ==========================================
 
     copyBtn.addEventListener("click", async () => {
 
         try {
 
-            await navigator.clipboard.writeText(generatedLetter);
+            await navigator.clipboard.writeText(
+                generatedLetter
+            );
 
             copyBtn.innerText = "✓ Copied";
 
@@ -125,31 +208,39 @@ function initCoverLetterGenerator() {
 
     });
 
+    // ==========================================
+    // DOCX Download
+    // ==========================================
+
     docxBtn.addEventListener("click", async () => {
 
-        const response = await fetch("/api/download-docx", {
+        const response = await fetch(
+            "/api/download-docx",
+            {
 
-            method: "POST",
+                method: "POST",
 
-            headers: {
+                headers: {
+                    "Content-Type":
+                        "application/json"
+                },
 
-                "Content-Type": "application/json"
+                body: JSON.stringify({
 
-            },
+                    letter: generatedLetter
 
-            body: JSON.stringify({
+                })
 
-                letter: generatedLetter
-
-            })
-
-        });
+            }
+        );
 
         const blob = await response.blob();
 
-        const url = window.URL.createObjectURL(blob);
+        const url =
+            window.URL.createObjectURL(blob);
 
-        const a = document.createElement("a");
+        const a =
+            document.createElement("a");
 
         a.href = url;
 
@@ -161,31 +252,39 @@ function initCoverLetterGenerator() {
 
     });
 
+    // ==========================================
+    // PDF Download
+    // ==========================================
+
     pdfBtn.addEventListener("click", async () => {
 
-        const response = await fetch("/api/download-pdf", {
+        const response = await fetch(
+            "/api/download-pdf",
+            {
 
-            method: "POST",
+                method: "POST",
 
-            headers: {
+                headers: {
+                    "Content-Type":
+                        "application/json"
+                },
 
-                "Content-Type": "application/json"
+                body: JSON.stringify({
 
-            },
+                    letter: generatedLetter
 
-            body: JSON.stringify({
+                })
 
-                letter: generatedLetter
-
-            })
-
-        });
+            }
+        );
 
         const blob = await response.blob();
 
-        const url = window.URL.createObjectURL(blob);
+        const url =
+            window.URL.createObjectURL(blob);
 
-        const a = document.createElement("a");
+        const a =
+            document.createElement("a");
 
         a.href = url;
 
@@ -199,8 +298,7 @@ function initCoverLetterGenerator() {
 
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-
-    initCoverLetterGenerator();
-
-});
+document.addEventListener(
+    "DOMContentLoaded",
+    initCoverLetterGenerator
+);

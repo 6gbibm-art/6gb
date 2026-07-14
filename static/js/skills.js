@@ -118,7 +118,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
             e.preventDefault();
 
-            if (highlightedIndex >= 0) {
+            // If a suggestion is highlighted, use it
+            if (highlightedIndex >= 0 && filteredSkills.length > 0) {
 
                 addSkill(filteredSkills[highlightedIndex]);
 
@@ -132,12 +133,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (!value) return;
 
-            const match = ALL_SKILLS.find(
+            // Check if it's already in ALL_SKILLS (case-insensitive)
+            const existingSkill = ALL_SKILLS.find(
                 skill => skill.toLowerCase() === value.toLowerCase()
             );
 
-            if (match)
-                addSkill(match);
+            if (existingSkill) {
+                addSkill(existingSkill);
+            } else {
+                // Add as a custom skill
+                addSkill(value);
+            }
 
             clearSuggestions();
 
@@ -211,8 +217,18 @@ function clearSuggestions() {
 
 function addSkill(skill) {
 
-    if (selectedSkills.includes(skill))
+    skill = skill.trim();
+
+    if (!skill) return;
+
+    // Prevent duplicates (case-insensitive)
+    if (
+        selectedSkills.some(
+            s => s.toLowerCase() === skill.toLowerCase()
+        )
+    ) {
         return;
+    }
 
     selectedSkills.push(skill);
 

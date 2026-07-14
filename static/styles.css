@@ -521,7 +521,8 @@
 
 .skills-container{
     width:100%;
-    margin-bottom:20px;
+    margin-bottom:5px;
+    margin-top:5px;
 }
 
 .selected-skills{
@@ -591,20 +592,26 @@
 }
 
 .skill-suggestions{
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
 
-    margin-top:6px;
+    margin-top: 4px;
 
-    background:#111827;
+    max-height: 250px;
+    overflow-y: auto;
 
-    border-radius:6px;
+    background: #171f2f;
+    border: 1px solid rgba(0,240,255,.25);
+    border-radius: 0 0 8px 8px;
 
-    overflow:hidden;
+    z-index: 1000;
 
-    max-height:220px;
-
-    overflow-y:auto;
-
-    display:none;
+    display: none;
+}
+.skills-container{
+    position : relative;
 }
 
 .skill-option{
@@ -626,4 +633,93 @@
 }
 #job-description {
     margin-bottom: 4px;
+    min-height:120px;      /* initial height */
+    max-height:260px;      /* stops growing here */
+
+    overflow-y:hidden;     /* JS will toggle this */
+    resize:none;
+
+    line-height:1.5;
+}
+.optional-details{
+    margin:8px 0 28px;
+}
+
+.optional-details h3{
+    text-align: center;
+    margin-bottom:6px;
+    font-size:1.5rem;
+    font-weight:900;
+    color:#10a6c4;
+    margin-left:20px;
+}
+
+.optional-details .terminal-text{
+    margin-bottom:18px;
+    opacity:.8;
+}
+
+.cover-letter-user-info{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:18px;
+}
+
+.input-group{
+    display:flex;
+    flex-direction:column;
+}
+
+.input-group label{
+    margin-bottom:6px;
+    margin-left:5px;
+    font-size:.96rem;
+    font-weight:600;
+    color:#cfd6e6;
+    letter-spacing:.3px;
+}
+
+.input-group .tech-input{
+    width:100%;
+    margin:0;
+}
+
+@media (max-width:900px){
+    .cover-letter-user-info{
+        grid-template-columns:repeat(2,1fr);
+    }
+}
+
+@media (max-width:600px){
+    .cover-letter-user-info{
+        grid-template-columns:1fr;
+    }
+}
+/* Entire scrollbar */
+::-webkit-scrollbar{
+    width:10px;
+    height:10px;
+}
+
+/* Background */
+::-webkit-scrollbar-track{
+    background:#0d1320;
+    border-radius:10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb{
+    background:#00d8ff;
+    border-radius:10px;
+    border:2px solid #0d1320;
+}
+
+/* Hover */
+::-webkit-scrollbar-thumb:hover{
+    background:#22e7ff;
+}
+
+/* Corner */
+::-webkit-scrollbar-corner{
+    background:#0d1320;
 }
