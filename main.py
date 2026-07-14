@@ -7,6 +7,14 @@ from fastapi.responses import StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from dotenv import load_dotenv
+from fastapi import Body
+from docx import Document
+from reportlab.platypus import SimpleDocTemplate, Paragraph
+from reportlab.lib.styles import getSampleStyleSheet
+import io
+from Prompts.cover_letter_prompt import get_cover_letter_prompt
+from Prompts.ats_prompt import get_ats_prompt
+from Prompts.interview_prep import get_interview_prompt
 
 # 1. Load Environment Variables securely
 load_dotenv()
@@ -80,21 +88,7 @@ async def analyze_resume(file: UploadFile = File(...)):
         if not resume_text.strip():
             raise HTTPException(status_code=400, detail="Could not extract text from the PDF.")
 
-        prompt = f"""
-        You are an expert ATS (Applicant Tracking System) software and a senior tech recruiter.
-        Review the following resume text and provide a strict ATS score out of 100.
-        Identify missing keywords, formatting/structural errors, and provide actionable bullet-point improvements.
-        Keep your response professional, formatting it clearly for a terminal-style UI.
-
-        Resume Text:
-        {resume_text}
-        - Return plain text only.
-        - Do NOT use Markdown.
-        - Do NOT wrap the response in triple backticks.
-        - Do NOT output ```terminal or any fenced code block.
-        - Do NOT use Markdown headings.
-        - This text will be displayed inside a terminal UI already, so do not simulate one using Markdown.
-        """
+        prompt = get_ats_prompt(resume_text)
 
         async def generate():
             response = client.models.generate_content_stream(
@@ -104,8 +98,7 @@ async def analyze_resume(file: UploadFile = File(...)):
             for chunk in response:
                 if chunk.text:
                     # Replace newlines with HTML breaks for the frontend UI
-                    text_chunk = chunk.text.replace("\n", "<br>") 
-                    yield f"data: {text_chunk}\n\n"
+                    yield f"data: {chunk.text}\n\n"
             yield "data: [DONE]\n\n"
 
         return StreamingResponse(generate(), media_type="text/event-stream")
@@ -113,29 +106,11 @@ async def analyze_resume(file: UploadFile = File(...)):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
         
-# OUR CODE IS WORKING UNTIL HERE. LETTER GENERATION DOES NOT WORK YET
 
 @app.post("/api/generate-letter")
 async def generate_cover_letter(job_description: str = Form(...), skill_set: str = Form(...)):
-    """Streams a generated cover letter based on the provided job description."""
     try:
-        prompt = f"""
-        You are an expert career coach. Write a compelling, highly professional cover letter 
-        based on the following job description parameters and the provided Skill set. Do not use generic placeholders like [Company Name] 
-        if the data is provided in the description. Keep it concise, impactful, and modern.
-        
-        Job Parameters:
-        {job_description}
-        Skill Set:
-        {skill_set}
-        - Return PLAIN TEXT ONLY.
-        - DO NOT use Markdown.
-        - DO NOT use headings with #.
-        - DO NOT use *, -, **, or bullet symbols.
-        - DO NOT use code blocks.
-        - Use numbered sections and blank lines for readability.
-        - Keep the language professional and concise.
-        """
+        prompt = get_cover_letter_prompt(job_description,skill_set)
 
         async def generate():
             response = client.models.generate_content_stream(
@@ -144,63 +119,100 @@ async def generate_cover_letter(job_description: str = Form(...), skill_set: str
             )
             for chunk in response:
                 if chunk.text:
-                    text_chunk = chunk.text.replace("\n", "<br>")
-                    yield f"data: {text_chunk}\n\n"
+                    yield f"data: {chunk.text}\n\n"
             yield "data: [DONE]\n\n"
 
         return StreamingResponse(generate(), media_type="text/event-stream")
         
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+@app.post("/api/download-docx")
+async def download_docx(data: dict = Body(...)):
+    """
+    Generates a downloadable Word document
+    from the generated cover letter.
+    """
+
+    letter = data.get("letter", "")
+
+    if not letter.strip():
+        raise HTTPException(status_code=400, detail="Cover letter is empty.")
+
+    document = Document()
+
+    document.add_heading("Cover Letter", level=1)
+
+    for paragraph in letter.split("\n"):
+        document.add_paragraph(paragraph)
+
+    buffer = io.BytesIO()
+
+    document.save(buffer)
+
+    buffer.seek(0)
+
+    return StreamingResponse(
+        buffer,
+        media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        headers={
+            "Content-Disposition":
+            'attachment; filename="Cover_Letter.docx"'
+        }
+    )
+@app.post("/api/download-pdf")
+async def download_pdf(data: dict = Body(...)):
+    """
+    Generates a downloadable PDF
+    from the generated cover letter.
+    """
+
+    letter = data.get("letter", "")
+
+    if not letter.strip():
+        raise HTTPException(status_code=400, detail="Cover letter is empty.")
+
+    buffer = io.BytesIO()
+
+    doc = SimpleDocTemplate(buffer)
+
+    styles = getSampleStyleSheet()
+
+    story = []
+
+    story.append(Paragraph("<b>Cover Letter</b>", styles["Heading1"]))
+
+    for paragraph in letter.split("\n"):
+
+        if paragraph.strip():
+
+            story.append(
+                Paragraph(
+                    paragraph.replace("&", "&amp;")
+                             .replace("<", "&lt;")
+                             .replace(">", "&gt;"),
+                    styles["BodyText"]
+                )
+            )
+
+    doc.build(story)
+
+    buffer.seek(0)
+
+    return StreamingResponse(
+        buffer,
+        media_type="application/pdf",
+        headers={
+            "Content-Disposition":
+            'attachment; filename="Cover_Letter.pdf"'
+        }
+    )
 
 
 @app.post("/api/start-interview")
 async def start_interview(role_title: str = Form(...)):
     """Streams interview questions and a roadmap based on the target role."""
     try:
-        prompt = f"""
-You are a senior interviewer.
-
-Create an interview guide for the role: {role_title}.
-
-Output plain text only.
-Do not use Markdown, #, *, -, tables, or code blocks.
-
-Include:
-
-Interview Guide: <Role>
-
-Brief introduction (2 sentences).
-
-Part 1: Technical Questions
-Generate 5 role-specific technical questions.
-For each:
-Question:
-Keywords:
-How to answer (3-5 concise points).
-
-Part 2: Behavioral Questions
-Generate 2 behavioral questions.
-For each:
-Question:
-What the interviewer evaluates:
-Suggested STAR approach.
-
-Part 3: Preparation Roadmap
-Provide 5 preparation steps with a short explanation.
-
-Part 4: Final Tips
-Provide 5 concise interview tips.
-
-Keep the response concise, professional, and under 1000 words.
-- Return PLAIN TEXT ONLY.
-- DO NOT use Markdown.
-- DO NOT use headings with #.
-- DO NOT use *, -, **, or bullet symbols.
-- DO NOT use code blocks.
-- Use numbered sections and blank lines for readability.
-- Keep the language professional and concise.
-"""
+        prompt = get_interview_prompt(role_title)
 
         async def generate():
             response = client.models.generate_content_stream(
@@ -218,6 +230,14 @@ Keep the response concise, professional, and under 1000 words.
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+# @app.on_event("startup")
+# async def show_routes():
+#     print("\n========== ROUTES ==========")
 
+#     for route in app.routes:
+#         methods = ",".join(route.methods or [])
+#         print(f"{methods:20} {route.path}")
+
+#     print("============================\n")
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=8080, reload=True)

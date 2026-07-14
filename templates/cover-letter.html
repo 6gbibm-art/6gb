@@ -4,39 +4,109 @@
 
 {% block main %}
 <section id="cover-letter-view" class="view-section active glass-panel">
+
     <h2>Cover Letter Generator</h2>
 
-    <p class="terminal-text">Input target job description parameters to synthesize a tailored cover letter.</p>
+    <p class="terminal-text">
+        Input target job description parameters to synthesize a tailored cover letter.
+    </p>
 
     <textarea
         id="job-description"
         class="tech-input"
         placeholder="> Paste Job Description parameters here..."></textarea>
+
     <div class="skills-container">
 
-    <div id="selected-skills" class="selected-skills">
+        <div id="selected-skills" class="selected-skills">
 
-        <input
-            type="text"
-            id="skill-input"
-            class="skill-input"
-            placeholder="Type a skill..." />
+            <input
+                type="text"
+                id="skill-input"
+                class="skill-input"
+                placeholder="Type a skill..." />
+
+        </div>
+
+        <div
+            id="skill-suggestions"
+            class="skill-suggestions">
+        </div>
 
     </div>
 
-    <div id="skill-suggestions"
-         class="skill-suggestions">
+    <button
+        id="generate-letter-btn"
+        class="action-btn">
+        Generate Cover Letter
+    </button>
+
+    <div
+        id="cover-letter-results"
+        class="terminal-text"
+        style="
+            display:none;
+            border:1px solid rgba(0,240,255,.3);
+            padding:1.5rem;
+            margin-top:1.5rem;
+            background:rgba(0,0,0,.4);
+            border-radius:6px;
+            line-height:1.6;
+            max-height:450px;
+            overflow-y:auto;
+            white-space:pre-wrap;
+        ">
     </div>
+
+    <!-- ================= ACTION TOOLBAR ================= -->
+
+    <div
+        id="letter-actions"
+        class="letter-actions"
+        style="
+            display:none;
+            margin-top:1rem;
+            gap:10px;
+            flex-wrap:wrap;
+        ">
+
+        <button
+            id="copy-letter-btn"
+            class="action-btn secondary-btn">
+
+            📋 Copy
+
+        </button>
+
+        <button
+            id="download-docx-btn"
+            class="action-btn secondary-btn">
+
+            📄 Download Word
+
+        </button>
+
+        <button
+            id="download-pdf-btn"
+            class="action-btn secondary-btn">
+
+            📕 Download PDF
+
+        </button>
+
+        <button
+            id="regenerate-btn"
+            class="action-btn secondary-btn">
+
+            🔄 Regenerate
+
+        </button>
 
     </div>
 
-    <button id="generate-letter-btn" class="action-btn">Generate Cover Letter</button>
-    <div id="cover-letter-results"
-         class="terminal-text"
-         style="display:none; border:1px solid rgba(0,240,255,.3); padding:1.5rem; margin-top:1.5rem; background:rgba(0,0,0,.4); border-radius:6px; line-height:1.6; max-height:400px; overflow-y:auto;">
-    </div>
 </section>
 {% endblock %}
+
 {% block scripts %}
 <script src="/static/js/skills.js"></script>
 <script src="/static/js/letter.js"></script>

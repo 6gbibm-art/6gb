@@ -63,12 +63,7 @@ function initInterviewPrep() {
                     const data = line.substring(6);
 
                     if (data === "[DONE]") {
-                        const cleanedMarkdown = markdown
-                        .replace(/^#{1,6}\s*/gm, "")
-                        .replace(/^\s*[-*]\s+/gm, "")
-                        .replace(/^---$/gm, "")
-                        .trim();
-                        results.innerHTML = marked.parse(cleanedMarkdown);
+                        results.innerHTML = marked.parse(markdown);
                         button.disabled = false;
                         button.innerText = "Start Simulation";
 
