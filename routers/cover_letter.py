@@ -29,11 +29,19 @@ async def download_docx(data: dict = Body(...)):
     letter = data.get("letter", "")
     if not letter.strip():
         raise HTTPException(status_code=400, detail="Cover letter is empty.")
-    return create_docx(letter)
+    return create_docx(
+        content=letter,
+        title="Cover Letter",
+        filename="Cover_Letter.docx"
+    )
 
 @router.post("/api/download-pdf")
 async def download_pdf(data: dict = Body(...)):
     letter = data.get("letter", "")
     if not letter.strip():
         raise HTTPException(status_code=400, detail="Cover letter is empty.")
-    return create_pdf(letter)
+    return create_pdf(
+        content=letter,
+        title="Cover Letter",
+        filename="Cover_Letter.pdf"
+    )
