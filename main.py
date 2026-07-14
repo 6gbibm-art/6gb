@@ -77,11 +77,17 @@ async def analyze_resume(file: UploadFile = File(...)):
         prompt = f"""
         You are an expert ATS (Applicant Tracking System) software and a senior tech recruiter.
         Review the following resume text and provide a strict ATS score out of 100.
-        Identify 3 missing keywords, 2 formatting/structural errors, and provide 3 actionable bullet-point improvements.
+        Identify missing keywords, formatting/structural errors, and provide actionable bullet-point improvements.
         Keep your response professional, formatting it clearly for a terminal-style UI.
 
         Resume Text:
         {resume_text}
+        - Return plain text only.
+        - Do NOT use Markdown.
+        - Do NOT wrap the response in triple backticks.
+        - Do NOT output ```terminal or any fenced code block.
+        - Do NOT use Markdown headings.
+        - This text will be displayed inside a terminal UI already, so do not simulate one using Markdown.
         """
 
         async def generate():
@@ -140,12 +146,123 @@ async def start_interview(role_title: str = Form(...)):
     """Streams interview questions and a roadmap based on the target role."""
     try:
         prompt = f"""
-        You are a hiring manager interviewing a candidate for the role of: {role_title}.
-        Generate 3 highly technical interview questions specific to this role, 
-        followed by 2 behavioral questions, and a brief 3-step roadmap on how to prepare. 
-        Also provide answers to the questions in pointers and highlight the keywords a candidate should put emphasis on.
-        Format this cleanly in a professional manner with pointers explaining on how to approach the answer.
-        """
+You are a Senior Engineering Manager and Principal Cloud Architect responsible for interviewing candidates.
+
+The candidate is preparing for the following role:
+
+Role:
+{role_title}
+
+Generate a comprehensive interview preparation guide.
+
+Requirements:
+
+- Return PLAIN TEXT ONLY.
+- DO NOT use Markdown.
+- DO NOT use headings with #.
+- DO NOT use *, -, **, or bullet symbols.
+- DO NOT use code blocks.
+- Use numbered sections and blank lines for readability.
+- Keep the language professional and concise.
+
+Use the following structure exactly:
+
+==================================================
+Interview Guide: <Role Name>
+==================================================
+
+Introduction
+Write a short 2-3 sentence introduction describing what this interview will focus on.
+
+Part 1: Technical Interview Questions
+
+Generate 5 technical interview questions.
+
+For EACH question include:
+
+Question 1:
+<question>
+
+Why this is asked:
+<1-2 sentences>
+
+Key Topics:
+Comma-separated keywords
+
+How to Answer:
+1. ...
+2. ...
+3. ...
+
+Example Talking Points:
+1. ...
+2. ...
+3. ...
+
+Difficulty:
+Easy / Medium / Hard
+
+
+Part 2: Behavioral Interview Questions
+
+Generate 2 behavioral questions.
+
+For EACH question include:
+
+Question:
+...
+
+What the interviewer is evaluating:
+...
+
+Suggested STAR Framework:
+Situation:
+Task:
+Action:
+Result:
+
+
+Part 3: Preparation Roadmap
+
+Create a practical 5-step preparation roadmap.
+
+For each step include:
+
+Step 1
+Objective:
+Resources to Study:
+Expected Outcome:
+
+Step 2
+...
+
+Part 4: Common Mistakes
+
+List 5 mistakes candidates commonly make during interviews for this role.
+
+Explain briefly why each mistake is harmful.
+
+
+Part 5: Final Tips
+
+Provide 5 practical interview tips that would improve the candidate's chances.
+
+Formatting Rules:
+
+Use only plain text.
+
+Separate sections with a blank line.
+
+Number everything.
+
+Never output:
+
+#
+##
+###
+*
+-
+** """
 
         async def generate():
             response = client.models.generate_content_stream(

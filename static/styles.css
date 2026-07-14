@@ -519,3 +519,111 @@
     }
 }
 
+.skills-container{
+    width:100%;
+    margin-bottom:20px;
+}
+
+.selected-skills{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    align-items:center;
+
+    min-height:58px;
+
+    background:#070b12;
+
+    border:1px solid rgba(0,240,255,.25);
+
+    border-radius:6px;
+
+    padding:10px;
+}
+
+.skill-input{
+
+    flex:1;
+
+    min-width:180px;
+
+    background:transparent;
+
+    border:none;
+
+    outline:none;
+
+    color:#00f0ff;
+
+    font-size:16px;
+
+    font-family:inherit;
+}
+
+.skill-pill{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    background:#00d7ff22;
+
+    border:1px solid #00f0ff;
+
+    color:#00f0ff;
+
+    padding:6px 12px;
+
+    border-radius:999px;
+
+    font-size:14px;
+}
+
+.remove-skill{
+
+    cursor:pointer;
+
+    color:#ff6666;
+
+    font-weight:bold;
+}
+
+.skill-suggestions{
+
+    margin-top:6px;
+
+    background:#111827;
+
+    border-radius:6px;
+
+    overflow:hidden;
+
+    max-height:220px;
+
+    overflow-y:auto;
+
+    display:none;
+}
+
+.skill-option{
+
+    padding:10px 15px;
+
+    cursor:pointer;
+
+    color:white;
+}
+
+.skill-option:hover{
+
+    background:#00f0ff22;
+}
+.skill-option.active{
+    background:rgba(0,240,255,.18);
+    color:#00f0ff;
+}
+#job-description {
+    margin-bottom: 4px;
+}

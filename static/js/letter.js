@@ -3,16 +3,15 @@ function initCoverLetterGenerator() {
     console.log("Cover Letter Generator called");
 
     const jobTextarea = document.getElementById("job-description");
-    const skillTextarea = document.getElementById("skill-set");
     const button = document.getElementById("generate-letter-btn");
     const results = document.getElementById("cover-letter-results");
 
-    if (!jobTextarea || !skillTextarea || !button || !results) return;
+    if (!jobTextarea || !button || !results) return;
 
     button.addEventListener("click", async () => {
 
         const jobDescription = jobTextarea.value.trim();
-        const skillSet = skillTextarea.value.trim();
+        const skills = getSelectedSkills();
 
         if (!jobDescription) {
             results.style.display = "block";
@@ -21,10 +20,10 @@ function initCoverLetterGenerator() {
             return;
         }
 
-        if (!skillSet) {
+        if (skills.length === 0) {
             results.style.display = "block";
             results.innerHTML =
-                "<span style='color:#ff5555;'>Please enter your skill set.</span>";
+                "<span style='color:#ff5555;'>Please select at least one skill.</span>";
             return;
         }
 
@@ -33,11 +32,11 @@ function initCoverLetterGenerator() {
 
         results.style.display = "block";
         results.innerHTML = "> Connecting to AI...<br><br>";
-        console.log(jobDescription);
-        console.log(skillSet);
+
         const formData = new FormData();
+
         formData.append("job_description", jobDescription);
-        formData.append("skill_set", skillSet);
+        formData.append("skill_set", skills.join(", "));
 
         try {
 
@@ -78,16 +77,21 @@ function initCoverLetterGenerator() {
 
                     results.innerHTML += data;
                     results.scrollTop = results.scrollHeight;
+
                 }
+
             }
 
         } catch (err) {
 
-            results.innerHTML +=
-                `<br><span style="color:#ff5555;">${err.message}</span>`;
+            results.innerHTML =
+                `<span style="color:#ff5555;">${err.message}</span>`;
+
+        } finally {
 
             button.disabled = false;
             button.innerText = "Generate Cover Letter";
+
         }
 
     });
