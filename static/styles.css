@@ -159,8 +159,11 @@
         padding: 1rem;
         font-family: var(--font-mono);
         border-radius: 6px;
-        resize: vertical;
         min-height: 50px;
+        font-size:1rem;
+        resize: none !important;
+        overflow-y: auto;
+        overflow-x: hidden;
     }
 
     .tech-input:focus {
@@ -459,9 +462,6 @@
     transition:all .3s ease;
 }
 
-.tech-input{
-    font-size:1rem;
-}
 
 .action-btn{
     min-width:220px;
@@ -518,3 +518,4 @@
         min-height:220px;
     }
 }
+

@@ -104,16 +104,18 @@ async def analyze_resume(file: UploadFile = File(...)):
 # OUR CODE IS WORKING UNTIL HERE. LETTER GENERATION DOES NOT WORK YET
 
 @app.post("/api/generate-letter")
-async def generate_cover_letter(job_description: str = Form(...)):
+async def generate_cover_letter(job_description: str = Form(...), skill_set: str = Form(...)):
     """Streams a generated cover letter based on the provided job description."""
     try:
         prompt = f"""
         You are an expert career coach. Write a compelling, highly professional cover letter 
-        based on the following job description parameters. Do not use generic placeholders like [Company Name] 
+        based on the following job description parameters and the provided Skill set. Do not use generic placeholders like [Company Name] 
         if the data is provided in the description. Keep it concise, impactful, and modern.
         
         Job Parameters:
         {job_description}
+        Skill Set:
+        {skill_set}
         """
 
         async def generate():

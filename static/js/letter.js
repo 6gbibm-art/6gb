@@ -1,14 +1,18 @@
 function initCoverLetterGenerator() {
+
     console.log("Cover Letter Generator called");
-    const textarea = document.getElementById("job-description");
+
+    const jobTextarea = document.getElementById("job-description");
+    const skillTextarea = document.getElementById("skill-set");
     const button = document.getElementById("generate-letter-btn");
     const results = document.getElementById("cover-letter-results");
 
-    if (!textarea || !button || !results) return;
+    if (!jobTextarea || !skillTextarea || !button || !results) return;
 
     button.addEventListener("click", async () => {
 
-        const jobDescription = textarea.value.trim();
+        const jobDescription = jobTextarea.value.trim();
+        const skillSet = skillTextarea.value.trim();
 
         if (!jobDescription) {
             results.style.display = "block";
@@ -17,13 +21,23 @@ function initCoverLetterGenerator() {
             return;
         }
 
+        if (!skillSet) {
+            results.style.display = "block";
+            results.innerHTML =
+                "<span style='color:#ff5555;'>Please enter your skill set.</span>";
+            return;
+        }
+
         button.disabled = true;
         button.innerText = "Generating...";
+
         results.style.display = "block";
         results.innerHTML = "> Connecting to AI...<br><br>";
-
+        console.log(jobDescription);
+        console.log(skillSet);
         const formData = new FormData();
         formData.append("job_description", jobDescription);
+        formData.append("skill_set", skillSet);
 
         try {
 
@@ -70,7 +84,7 @@ function initCoverLetterGenerator() {
         } catch (err) {
 
             results.innerHTML +=
-                `<br><span style="color:red;">${err.message}</span>`;
+                `<br><span style="color:#ff5555;">${err.message}</span>`;
 
             button.disabled = false;
             button.innerText = "Generate Cover Letter";
