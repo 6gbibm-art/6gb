@@ -5,6 +5,7 @@ from fastapi import (APIRouter,Form,Body,HTTPException)
 from fastapi.responses import JSONResponse
 from services.gemini_service import generate
 from prompts.cover_letter_prompt import (get_cover_letter_prompt)
+
 router = APIRouter(tags=["Cover Letter"])
 
 @router.post("/api/generate-letter")
