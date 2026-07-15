@@ -50,7 +50,7 @@ function initCoverLetterGenerator() {
     // ==========================================
 
     async function generateLetter() {
-
+        hideRateLimit();
         const applicantDetails = {
 
             name: document.getElementById("user-name").value.trim(),
@@ -124,7 +124,7 @@ function initCoverLetterGenerator() {
 
         try {
 
-            const response = await fetch(
+            const response = await apiFetch(
                 "/api/generate-letter",
                 {
                     method: "POST",
@@ -132,10 +132,9 @@ function initCoverLetterGenerator() {
                 }
             );
 
-            if (!response.ok)
-                throw new Error("Server communication failed.");
-
             const data = await response.json();
+
+            hideRateLimit();
 
             generatedLetter = data.letter;
 
@@ -148,8 +147,19 @@ function initCoverLetterGenerator() {
 
         catch (err) {
 
-            results.innerHTML =
-                `<span style="color:#ff5555;">${err.message}</span>`;
+            if (err.message === "RATE_LIMIT") {
+
+                results.style.display = "none";
+
+                generateBtn.innerText = "Generate Cover Letter";
+
+                return;
+            }
+
+            showError(
+                resultsContainer,
+                error.message
+            );
 
         }
 
@@ -182,117 +192,50 @@ function initCoverLetterGenerator() {
     // Copy
     // ==========================================
 
-    copyBtn.addEventListener("click", async () => {
-
-        try {
-
-            await navigator.clipboard.writeText(
-                generatedLetter
-            );
-
-            copyBtn.innerText = "✓ Copied";
-
-            setTimeout(() => {
-
-                copyBtn.innerText = "📋 Copy";
-
-            }, 1500);
-
-        }
-
-        catch {
-
-            alert("Clipboard access failed.");
-
-        }
-
-    });
+    copyBtn.addEventListener("click", () =>
+    copyToClipboard(
+        generatedLetter,
+        copyBtn,
+        "📋 Copy"
+        )
+    );
 
     // ==========================================
     // DOCX Download
     // ==========================================
 
-    docxBtn.addEventListener("click", async () => {
+    docxBtn.addEventListener("click", () => {
 
-        const response = await fetch(
-            "/api/download-docx",
-            {
+    downloadFromApi(
 
-                method: "POST",
+        "/api/download-docx",
 
-                headers: {
-                    "Content-Type":
-                        "application/json"
-                },
+        {
+            letter: generatedLetter
+        },
 
-                body: JSON.stringify({
+        "Cover_Letter.docx"
 
-                    letter: generatedLetter
-
-                })
-
-            }
-        );
-
-        const blob = await response.blob();
-
-        const url =
-            window.URL.createObjectURL(blob);
-
-        const a =
-            document.createElement("a");
-
-        a.href = url;
-
-        a.download = "Cover_Letter.docx";
-
-        a.click();
-
-        URL.revokeObjectURL(url);
+    );
 
     });
 
     // ==========================================
     // PDF Download
     // ==========================================
+    pdfBtn.addEventListener("click", () => {
 
-    pdfBtn.addEventListener("click", async () => {
+    downloadFromApi(
 
-        const response = await fetch(
-            "/api/download-pdf",
-            {
+        "/api/download-pdf",
 
-                method: "POST",
+        {
+            letter: generatedLetter
+        },
 
-                headers: {
-                    "Content-Type":
-                        "application/json"
-                },
+        "Cover_Letter.pdf"
 
-                body: JSON.stringify({
-
-                    letter: generatedLetter
-
-                })
-
-            }
-        );
-
-        const blob = await response.blob();
-
-        const url =
-            window.URL.createObjectURL(blob);
-
-        const a =
-            document.createElement("a");
-
-        a.href = url;
-
-        a.download = "Cover_Letter.pdf";
-
-        a.click();
-
-        URL.revokeObjectURL(url);
+    );
 
     });
 

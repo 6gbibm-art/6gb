@@ -1,0 +1,170 @@
+{% extends "layout.html" %}
+{% set active_page = "about" %}
+{% block title %}About Us | AI Career Coach{% endblock %}
+
+{% block main %}
+
+<section id="about-view" class="view-section active glass-panel about-text">
+
+    <h2>Meet the Team</h2>
+
+    <p class="terminal-text about-text">
+        AI Career Coach was designed and developed by six BCA students with the goal of
+        building a modern AI-powered platform for resume analysis, cover letter generation,
+        and interview preparation.
+    </p>
+
+    <div class="team-grid">
+
+        {% for member in members %}
+
+        <div class="team-card">
+
+            <!-- ================= PHOTO ================= -->
+
+            <div class="member-image">
+
+                <img
+                    src="/static/images/team/{{ member.photo_filename }}"
+                    alt="{{ member.name }}">
+
+            </div>
+
+            <!-- ================= BASIC INFO ================= -->
+
+            <div class="member-summary">
+
+                <h3>{{ member.name }}</h3>
+
+                <p class="member-role">
+
+                    {{ member.role }}
+
+                </p>
+
+            </div>
+
+            <!-- ================= EXPAND BUTTON ================= -->
+
+            <button
+                class="expand-btn"
+                type="button">
+
+                ▼ View Details
+
+            </button>
+
+            <!-- ================= EXPANDABLE CONTENT ================= -->
+
+            <div class="member-details">
+
+                {% if member.bio %}
+
+                <div class="detail-section">
+
+                    <h4>About</h4>
+
+                    <p>
+
+                        {{ member.bio }}
+
+                    </p>
+
+                </div>
+
+                {% endif %}
+
+                <div class="detail-section">
+
+                    <h4>Project Contributions</h4>
+
+                    <ul>
+
+                        {% for contribution in member.contributions %}
+
+                        <li>
+
+                            {{ contribution }}
+
+                        </li>
+
+                        {% endfor %}
+
+                    </ul>
+
+                </div>
+
+                <div class="detail-section">
+
+                    <h4>Contact</h4>
+
+                    <div class="member-links">
+
+                        <a
+                            href="mailto:{{ member.email }}"
+                            class="member-link">
+
+                            📧 Email
+
+                        </a>
+
+                        {% if member.github %}
+
+                        <a
+                            href="{{ member.github }}"
+                            target="_blank"
+                            class="member-link">
+
+                            💻 GitHub
+
+                        </a>
+
+                        {% endif %}
+
+                        {% if member.linkedin %}
+
+                        <a
+                            href="{{ member.linkedin }}"
+                            target="_blank"
+                            class="member-link">
+
+                            🔗 LinkedIn
+
+                        </a>
+
+                        {% endif %}
+
+                        {% if member.portfolio %}
+
+                        <a
+                            href="{{ member.portfolio }}"
+                            target="_blank"
+                            class="member-link">
+
+                            🌐 Portfolio
+
+                        </a>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
+{% endblock %}
+
+{% block scripts %}
+
+<script src="/static/js/about.js"></script>
+
+{% endblock %}

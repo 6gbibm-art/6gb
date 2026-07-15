@@ -1,15 +1,18 @@
 import json
 from services.create_docx_service import create_docx
 from services.create_pdf_service import create_pdf
-from fastapi import (APIRouter,Form,Body,HTTPException)
+from fastapi import (APIRouter,Form,Body,HTTPException,  Request)
 from fastapi.responses import JSONResponse
 from services.gemini_service import generate
 from prompts.cover_letter_prompt import (get_cover_letter_prompt)
+from middleware.rate_limiter import limiter, API_RATE_LIMIT
 
 router = APIRouter(tags=["Cover Letter"])
 
 @router.post("/api/generate-letter")
+@limiter.limit(API_RATE_LIMIT)
 async def generate_cover_letter(
+    request: Request,
     job_description: str = Form(...),
     skill_set: str = Form(...),
     applicant_details: str = Form("{}")

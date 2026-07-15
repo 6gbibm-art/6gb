@@ -1,16 +1,18 @@
-from fastapi import APIRouter, Form, Body, HTTPException
+from fastapi import APIRouter, Form, Body, HTTPException,  Request
 from fastapi.responses import JSONResponse
 
 from prompts.interview_prep import get_interview_prompt
 from services.gemini_service import generate
 from services.create_pdf_service import create_pdf
 from services.create_docx_service import create_docx
+from middleware.rate_limiter import limiter, API_RATE_LIMIT
 
 router = APIRouter(tags=["Interview"])
 
 
 @router.post("/api/start-interview")
-async def start_interview(role_title: str = Form(...)):
+@limiter.limit(API_RATE_LIMIT)
+async def start_interview(request: Request, role_title: str = Form(...)):
     try:
         prompt = get_interview_prompt(role_title)
 

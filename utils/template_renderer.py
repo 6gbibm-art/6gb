@@ -14,5 +14,5 @@ def render_template(
     return templates.TemplateResponse(
         request=request,
         name=template_name,
-        context=context
+        context={**context}
     )

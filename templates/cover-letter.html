@@ -103,7 +103,14 @@
         class="action-btn">
         Generate Cover Letter
     </button>
+    <div
+    id="rate-limit-box"
+    class="rate-limit-box"
+    style="display:none;">
 
+    ⚠ Please wait one minute before trying again.
+
+        </div>
     <div
         id="cover-letter-results"
         class="terminal-text"
@@ -165,6 +172,7 @@
 {% endblock %}
 
 {% block scripts %}
+<script src="/static/js/utils.js"></script>
 <script src="/static/js/skills.js"></script>
 <script src="/static/js/letter.js"></script>
 {% endblock %}

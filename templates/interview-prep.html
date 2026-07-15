@@ -15,7 +15,14 @@
     placeholder="> e.g., Cloud Architect, Junior Frontend Developer">
 
     <button id="start-interview-btn" class="action-btn">Start Simulation</button>
+    <div
+    id="rate-limit-box"
+    class="rate-limit-box"
+    style="display:none;">
 
+    ⚠ Please wait one minute before trying again.
+
+        </div>
     <div
     id="interview-results"
     class="terminal-text"
@@ -76,5 +83,6 @@
 {% endblock %}
 
 {% block scripts %}
+<script src="/static/js/utils.js"></script>
 <script src="/static/js/interview.js"></script>
 {% endblock %}

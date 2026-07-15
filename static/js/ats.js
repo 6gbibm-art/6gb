@@ -3,7 +3,6 @@ function initResumeAnalyzer() {
     console.log("initResumeAnalyzer called");
 
     let generatedReport = "";
-
     const dropzone = document.getElementById("dropzone");
     const fileInput = document.getElementById("resume-upload");
     const analyzeBtn = document.getElementById("analyze-btn");
@@ -21,7 +20,7 @@ function initResumeAnalyzer() {
     // ============================
 
     fileInput.addEventListener("change", (e) => {
-
+        hideRateLimit();
         if (e.target.files.length > 0) {
 
             const fileName = e.target.files[0].name;
@@ -71,7 +70,7 @@ function initResumeAnalyzer() {
     // ============================
 
     async function analyzeResume() {
-
+        hideRateLimit();
         const file = fileInput.files[0];
 
         if (!file) return;
@@ -92,18 +91,16 @@ function initResumeAnalyzer() {
 
         try {
 
-            const response = await fetch("/api/analyze-resume", {
+            const response = await apiFetch("/api/analyze-resume", {
                 method: "POST",
                 body: formData
             });
 
-            if (!response.ok)
-                throw new Error("Server communication failed.");
-
             const data = await response.json();
-
+            hideRateLimit();
             generatedReport = data.report;
 
+            resultsContainer.className = "terminal-text results-panel";
             resultsContainer.innerHTML =
                 generatedReport.replace(/\n/g, "<br>");
 
@@ -115,8 +112,17 @@ function initResumeAnalyzer() {
 
         catch (error) {
 
-            resultsContainer.innerHTML =
-                `<span style="color:#ff5555;">${error.message}</span>`;
+            if (error.message === "RATE_LIMIT") {
+
+                resultsContainer.style.display = "none";
+                analyzeBtn.innerText = "Retry Analysis";
+                return;
+            }
+
+            showError(
+                resultsContainer,
+                error.message
+            );
 
             analyzeBtn.innerText = "Retry Analysis";
 
@@ -144,74 +150,35 @@ function initResumeAnalyzer() {
     // Copy
     // ============================
 
-    copyBtn.addEventListener("click", async () => {
-
-        try {
-
-            await navigator.clipboard.writeText(
-                generatedReport
-            );
-
-            copyBtn.innerText = "✓ Copied";
-
-            setTimeout(() => {
-
-                copyBtn.innerText = "📋 Copy";
-
-            }, 1500);
-
-        }
-
-        catch {
-
-            alert("Clipboard access failed.");
-
-        }
-
-    });
+    copyBtn.addEventListener("click", () =>
+    copyToClipboard(
+        generatedReport,
+        copyBtn,
+        "📋 Copy"
+        )
+    );
 
     // ============================
     // PDF Download
     // ============================
 
-    pdfBtn.addEventListener("click", async () => {
+    pdfBtn.addEventListener("click", () => {
 
-        const response = await fetch(
-            "/api/download-analysis-pdf",
-            {
+    downloadFromApi(
 
-                method: "POST",
+        "/api/download-analysis-pdf",
 
-                headers: {
-                    "Content-Type": "application/json"
-                },
+        {
+            report: generatedReport
+        },
 
-                body: JSON.stringify({
+        "ATS_Report.pdf"
 
-                    report: generatedReport
-
-                })
-
-            }
-        );
-
-        const blob = await response.blob();
-
-        const url =
-            window.URL.createObjectURL(blob);
-
-        const a =
-            document.createElement("a");
-
-        a.href = url;
-
-        a.download = "ATS_Report.pdf";
-
-        a.click();
-
-        URL.revokeObjectURL(url);
+    );
 
     });
+
+
 
 }
 

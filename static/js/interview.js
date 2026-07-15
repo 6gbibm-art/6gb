@@ -17,7 +17,7 @@ function initInterviewPrep() {
     if (!input || !button || !results) return;
 
     async function generateInterviewGuide() {
-
+        hideRateLimit();
         const role = input.value.trim();
 
         if (!role) {
@@ -46,16 +46,13 @@ function initInterviewPrep() {
 
         try {
 
-            const response = await fetch("/api/start-interview", {
+            const response = await apiFetch("/api/start-interview", {
                 method: "POST",
                 body: formData
             });
 
-            if (!response.ok)
-                throw new Error("Server communication failed.");
-
             const data = await response.json();
-
+            hideRateLimit();
             generatedGuide = data.guide;
 
             results.innerHTML =
@@ -67,8 +64,18 @@ function initInterviewPrep() {
 
         catch (err) {
 
-            results.innerHTML =
-                `<span style="color:#ff5555;">${err.message}</span>`;
+            if (err.message === "RATE_LIMIT") {
+
+                results.style.display = "none";
+                button.innerText = "Start Simulation";
+                return;
+
+            }
+
+            showError(
+                resultsContainer,
+                error.message
+            );
 
         }
 
@@ -95,115 +102,50 @@ function initInterviewPrep() {
     // Copy
     // ==========================================
 
-    copyBtn.addEventListener("click", async () => {
-
-        try {
-
-            await navigator.clipboard.writeText(
-                generatedGuide
-            );
-
-            copyBtn.innerText = "✓ Copied";
-
-            setTimeout(() => {
-
-                copyBtn.innerText = "📋 Copy";
-
-            }, 1500);
-
-        }
-
-        catch {
-
-            alert("Clipboard access failed.");
-
-        }
-
-    });
+    copyBtn.addEventListener("click", () =>
+    copyToClipboard(
+        generatedGuide,
+        copyBtn,
+        "📋 Copy"
+        )
+    );
 
     // ==========================================
     // DOCX Download
     // ==========================================
 
-    docxBtn.addEventListener("click", async () => {
+    docxBtn.addEventListener("click", () => {
 
-        const response = await fetch(
-            "/api/download-interview-docx",
-            {
+    downloadFromApi(
 
-                method: "POST",
+        "/api/download-interview-docx",
 
-                headers: {
-                    "Content-Type": "application/json"
-                },
+        {
+            guide: generatedGuide
+        },
 
-                body: JSON.stringify({
+        "Interview_Guide.docx"
 
-                    guide: generatedGuide
-
-                })
-
-            }
-        );
-
-        const blob = await response.blob();
-
-        const url =
-            window.URL.createObjectURL(blob);
-
-        const a =
-            document.createElement("a");
-
-        a.href = url;
-
-        a.download = "Interview_Guide.docx";
-
-        a.click();
-
-        URL.revokeObjectURL(url);
+    );
 
     });
 
-    // ==========================================
-    // PDF Download
-    // ==========================================
+// PDF Download
+// ==========================================
 
-    pdfBtn.addEventListener("click", async () => {
+    pdfBtn.addEventListener("click", () => {
 
-        const response = await fetch(
+        downloadFromApi(
+
             "/api/download-interview-pdf",
+
             {
+                guide: generatedGuide
+            },
 
-                method: "POST",
+            "Interview_Guide.pdf"
 
-                headers: {
-                    "Content-Type": "application/json"
-                },
-
-                body: JSON.stringify({
-
-                    guide: generatedGuide
-
-                })
-
-            }
         );
-
-        const blob = await response.blob();
-
-        const url =
-            window.URL.createObjectURL(blob);
-
-        const a =
-            document.createElement("a");
-
-        a.href = url;
-
-        a.download = "Interview_Guide.pdf";
-
-        a.click();
-
-        URL.revokeObjectURL(url);
 
     });
 

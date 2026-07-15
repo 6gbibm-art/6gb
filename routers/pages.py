@@ -1,5 +1,4 @@
 from fastapi import APIRouter, Request
-
 from utils.template_renderer import render_template
 
 router = APIRouter()
