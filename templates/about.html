@@ -2,25 +2,44 @@
 {% set active_page = "about" %}
 {% block title %}About Us | AI Career Coach{% endblock %}
 
+{% block styles %}
+<link rel="stylesheet" href="/static/about.css">
+{% endblock %}
+
 {% block main %}
 
-<section id="about-view" class="view-section active glass-panel about-text">
+<section id="about-view" class="view-section active glass-panel about-page">
 
     <h2>Meet the Team</h2>
 
-    <p class="terminal-text about-text">
+    <p class="terminal-text about-description">
         AI Career Coach was designed and developed by six BCA students with the goal of
-        building a modern AI-powered platform for resume analysis, cover letter generation,
-        and interview preparation.
+        building a modern AI-powered platform for Resume Analysis, Cover Letter Generation,
+        and Interview Preparation.
     </p>
 
     <div class="team-grid">
 
         {% for member in members %}
 
-        <div class="team-card">
+        <div
+            class="team-card"
 
-            <!-- ================= PHOTO ================= -->
+            data-name="{{ member.name }}"
+
+            data-role="{{ member.role }}"
+
+            data-photo="{{ member.photo_filename }}"
+
+            data-email="{{ member.email }}"
+
+            data-github="{{ member.github if member.github else '' }}"
+
+            data-linkedin="{{ member.linkedin if member.linkedin else '' }}"
+
+            data-portfolio="{{ member.portfolio if member.portfolio else '' }}"
+
+            data-contributions='{{ member.contributions | tojson }}'>
 
             <div class="member-image">
 
@@ -29,8 +48,6 @@
                     alt="{{ member.name }}">
 
             </div>
-
-            <!-- ================= BASIC INFO ================= -->
 
             <div class="member-summary">
 
@@ -44,114 +61,13 @@
 
             </div>
 
-            <!-- ================= EXPAND BUTTON ================= -->
-
             <button
-                class="expand-btn"
-                type="button">
+                type="button"
+                class="view-details-btn">
 
-                ▼ View Details
+                View Details
 
             </button>
-
-            <!-- ================= EXPANDABLE CONTENT ================= -->
-
-            <div class="member-details">
-
-                {% if member.bio %}
-
-                <div class="detail-section">
-
-                    <h4>About</h4>
-
-                    <p>
-
-                        {{ member.bio }}
-
-                    </p>
-
-                </div>
-
-                {% endif %}
-
-                <div class="detail-section">
-
-                    <h4>Project Contributions</h4>
-
-                    <ul>
-
-                        {% for contribution in member.contributions %}
-
-                        <li>
-
-                            {{ contribution }}
-
-                        </li>
-
-                        {% endfor %}
-
-                    </ul>
-
-                </div>
-
-                <div class="detail-section">
-
-                    <h4>Contact</h4>
-
-                    <div class="member-links">
-
-                        <a
-                            href="mailto:{{ member.email }}"
-                            class="member-link">
-
-                            📧 Email
-
-                        </a>
-
-                        {% if member.github %}
-
-                        <a
-                            href="{{ member.github }}"
-                            target="_blank"
-                            class="member-link">
-
-                            💻 GitHub
-
-                        </a>
-
-                        {% endif %}
-
-                        {% if member.linkedin %}
-
-                        <a
-                            href="{{ member.linkedin }}"
-                            target="_blank"
-                            class="member-link">
-
-                            🔗 LinkedIn
-
-                        </a>
-
-                        {% endif %}
-
-                        {% if member.portfolio %}
-
-                        <a
-                            href="{{ member.portfolio }}"
-                            target="_blank"
-                            class="member-link">
-
-                            🌐 Portfolio
-
-                        </a>
-
-                        {% endif %}
-
-                    </div>
-
-                </div>
-
-            </div>
 
         </div>
 
@@ -161,10 +77,69 @@
 
 </section>
 
+<!-- ======================================================
+     TEAM MEMBER MODAL
+======================================================= -->
+
+<div
+    id="team-modal"
+    class="team-modal">
+
+    <div
+        class="team-modal-content">
+
+        <button
+            id="close-modal"
+            class="close-modal">
+
+            &times;
+
+        </button>
+
+        <div class="modal-left">
+
+            <img
+                id="modal-photo"
+                src=""
+                alt="">
+
+        </div>
+
+        <div class="modal-right">
+
+            <h2 id="modal-name"></h2>
+
+            <p id="modal-role"></p>
+
+            <div class="modal-section">
+
+                <h3>Project Contributions</h3>
+
+                <ul id="modal-contributions">
+
+                </ul>
+
+            </div>
+
+            <div
+                id="modal-links"
+                class="modal-links">
+
+            </div>
+
+        </div>
+
+    </div>
+        <div
+        id="copy-toast"
+        class="copy-toast">
+
+    </div>
+
+</div>
+
 {% endblock %}
 
 {% block scripts %}
-
 <script src="/static/js/about.js"></script>
-
 {% endblock %}

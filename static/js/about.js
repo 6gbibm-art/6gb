@@ -2,78 +2,213 @@ function initAboutPage() {
 
     console.log("About page initialized");
 
-    const cards = document.querySelectorAll(".team-card");
+    const cards =
+        document.querySelectorAll(".team-card");
 
-    if (!cards.length) return;
+    const modal =
+        document.getElementById("team-modal");
 
-    cards.forEach(card => {
+    const closeBtn =
+        document.getElementById("close-modal");
 
-        const button = card.querySelector(".expand-btn");
+    const modalPhoto =
+        document.getElementById("modal-photo");
 
-        // ===========================
-        // Toggle Function
-        // ===========================
+    const modalName =
+        document.getElementById("modal-name");
 
-        function toggleCard() {
+    const modalRole =
+        document.getElementById("modal-role");
 
-            const isActive =
-                card.classList.contains("active");
+    const modalContributions =
+        document.getElementById("modal-contributions");
 
-            // Close all other cards
-            cards.forEach(otherCard => {
+    const modalLinks =
+        document.getElementById("modal-links");
 
-                if (otherCard !== card) {
+    if (!cards.length || !modal) return;
 
-                    otherCard.classList.remove("active");
+    // ==========================================
+    // Open Modal
+    // ==========================================
 
-                    const otherButton =
-                        otherCard.querySelector(".expand-btn");
+    function openModal(card) {
 
-                    if (otherButton) {
+        modalPhoto.src =
+            "/static/images/team/" +
+            card.dataset.photo;
 
-                        otherButton.innerText =
-                            "View Details";
+        modalPhoto.alt =
+            card.dataset.name;
 
-                    }
+        modalName.textContent =
+            card.dataset.name;
 
-                }
+        modalRole.textContent =
+            card.dataset.role;
 
-            });
+        // ==========================
+        // Contributions
+        // ==========================
 
-            // Toggle current card
+        modalContributions.innerHTML = "";
 
-            if (isActive) {
+        const contributions =
+            JSON.parse(card.dataset.contributions);
 
-                card.classList.remove("active");
+        contributions.forEach(item => {
 
-                button.innerText =
-                    "▼View Details";
+            const li =
+                document.createElement("li");
+
+            li.textContent = item;
+
+            modalContributions.appendChild(li);
+
+        });
+
+        // ==========================
+        // Links
+        // ==========================
+
+        modalLinks.innerHTML = "";
+
+        // Email
+
+        // Email
+
+    if (card.dataset.email) {
+
+        const email =
+            document.createElement("button");
+
+        email.type = "button";
+
+        email.className = "modal-copy-btn";
+
+        email.innerHTML = "📧 Copy Email";
+
+        email.addEventListener("click", async () => {
+
+            try {
+
+                await navigator.clipboard.writeText(
+                    card.dataset.email
+                );
+
+                showCopyToast("Email copied to clipboard!");
 
             }
 
-            else {
+            catch {
 
-                card.classList.add("active");
-
-                button.innerText =
-                    "▲Hide Details";
+                showCopyToast("Clipboard access failed.");
 
             }
+
+        });
+
+        modalLinks.appendChild(email);
+
+    }
+
+        // GitHub
+
+        // GitHub
+
+        if (card.dataset.github) {
+
+            const github =
+                document.createElement("a");
+
+            github.href =
+                card.dataset.github;
+
+            github.target = "_blank";
+
+            github.innerHTML = `
+                <img
+                    src="/static/images/favicon/github.png"
+                    class="member-icon"
+                    alt="GitHub">
+
+                GitHub
+            `;
+
+            modalLinks.appendChild(github);
 
         }
 
-        // ===========================
-        // Clicking card
-        // ===========================
+        // LinkedIn
 
-        card.addEventListener(
-            "click",
-            toggleCard
-        );
+        if (card.dataset.linkedin) {
 
-        // ===========================
-        // Prevent double firing
-        // ===========================
+            const linkedin =
+                document.createElement("a");
+
+            linkedin.href =
+                card.dataset.linkedin;
+
+            linkedin.target = "_blank";
+
+            linkedin.innerHTML = `
+                <img
+                    src="/static/images/favicon/linkedin.png"
+                    class="member-icon"
+                    alt="LinkedIn">
+
+                LinkedIn
+            `;
+
+            modalLinks.appendChild(linkedin);
+
+}
+
+        // Portfolio
+
+        if (card.dataset.portfolio) {
+
+            const portfolio =
+                document.createElement("a");
+
+            portfolio.href =
+                card.dataset.portfolio;
+
+            portfolio.target = "_blank";
+
+            portfolio.innerHTML =
+                "🌐 Portfolio";
+
+            modalLinks.appendChild(portfolio);
+
+        }
+
+        modal.classList.add("show");
+
+        document.body.style.overflow = "hidden";
+
+    }
+
+    // ==========================================
+    // Close Modal
+    // ==========================================
+
+    function closeModal() {
+
+        modal.classList.remove("show");
+
+        document.body.style.overflow = "";
+
+    }
+
+    // ==========================================
+    // Card Click
+    // ==========================================
+
+    cards.forEach(card => {
+
+        const button =
+            card.querySelector(".view-details-btn");
 
         button.addEventListener(
             "click",
@@ -81,15 +216,89 @@ function initAboutPage() {
 
                 e.stopPropagation();
 
-                toggleCard();
+                openModal(card);
+
+            }
+        );
+
+        card.addEventListener(
+            "click",
+            function () {
+
+                openModal(card);
 
             }
         );
 
     });
 
-}
+    // ==========================================
+    // Close Button
+    // ==========================================
 
+    closeBtn.addEventListener(
+        "click",
+        closeModal
+    );
+
+    // ==========================================
+    // Click Outside Modal
+    // ==========================================
+
+    modal.addEventListener(
+        "click",
+        function (e) {
+
+            if (e.target === modal) {
+
+                closeModal();
+
+            }
+
+        }
+    );
+
+    // ==========================================
+    // ESC Key
+    // ==========================================
+
+    document.addEventListener(
+        "keydown",
+        function (e) {
+
+            if (
+                e.key === "Escape" &&
+                modal.classList.contains("show")
+            ) {
+
+                closeModal();
+
+            }
+
+        }
+    );
+
+}
+function showCopyToast(message) {
+
+    const toast =
+        document.getElementById("copy-toast");
+
+    if (!toast) return;
+
+    toast.textContent = message;
+
+    toast.classList.add("show");
+
+    clearTimeout(toast.hideTimer);
+
+    toast.hideTimer = setTimeout(() => {
+
+        toast.classList.remove("show");
+
+    }, 2000);
+
+}
 document.addEventListener(
     "DOMContentLoaded",
     initAboutPage

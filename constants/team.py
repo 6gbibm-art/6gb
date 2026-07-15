@@ -26,7 +26,7 @@ TEAM_MEMBERS: list[TeamMember] = [
 
         name="Mudit Dua",
 
-        role="Lead Frontend & Backend Developer",
+        role="Lead Frontend & Backend Development",
 
         photo_filename="mudit.jpg",
 
@@ -44,7 +44,7 @@ TEAM_MEMBERS: list[TeamMember] = [
 
             "Developed ATS Resume Analyzer",
 
-            "Designed project architecture"
+            "Designed project architecture",
 
         ]
 
@@ -54,11 +54,13 @@ TEAM_MEMBERS: list[TeamMember] = [
 
         name="Ananya Singh Chauhan",
 
-        role="Lead Frontend Developer",
+        role="Co-Lead Frontend and Backend Development",
 
         photo_filename="ananya.jpg",
 
-        email="chunghaxx.0@gmail.com",
+        email="ananya.chauhan1306@gmail.com",
+
+        github="https://github.com/ananya130606",
 
         linkedin="https://www.linkedin.com/in/ananyasinghchauhan/",
 
@@ -80,13 +82,36 @@ TEAM_MEMBERS: list[TeamMember] = [
 
         name="Ramya Gupta",
 
-        role="Reports and AWS",
+        role="Team Leader - Reports and AWS",
 
         photo_filename="ramya.jpg",
 
         email="ramyagupta7172@gmail.com",
 
         linkedin="https://www.linkedin.com/in/ramya-gupta-353526273/",
+
+        contributions=[
+
+            "Lead the team",
+
+            "Managing roles",
+
+            "Setup AWS",
+
+        ]
+
+    ),
+    TeamMember(
+
+        name="Vidhi Kapoor",
+
+        role="Paperwork and AWS",
+
+        photo_filename="vidhi.jpg",
+
+        email="kapoorvidhi6@gmail.com",
+
+        linkedin="https://www.linkedin.com/in/vidhi-kapoor-39b6aa276/",
 
         contributions=[
 
@@ -103,15 +128,40 @@ TEAM_MEMBERS: list[TeamMember] = [
     ),
     TeamMember(
 
-        name="Vidhi Kapoor",
+        name="Yogus Wadhwa",
 
-        role="Ptani abhi kya role",
+        role="Paperwork and AWS",
 
-        photo_filename="vidhi.jpg",
+        photo_filename="yogus.jpg",
 
-        email="kapoorvidhi6@gmail.com",
+        email="yoguswadhwa@gmail.com",
 
-        linkedin="https://www.linkedin.com/in/vidhi-kapoor-39b6aa276/",
+        linkedin="https://www.linkedin.com/in/yogus-wadhwa-41b4042b0/",
+
+        contributions=[
+
+            "Designed dashboard UI",
+
+            "Built responsive layouts",
+
+            "Implemented animations",
+
+            "Improved accessibility"
+
+        ]
+
+    ),
+    TeamMember(
+
+        name="Prateek",
+
+        role="Paperwork and AWS",
+
+        photo_filename="prateek.jpg",
+
+        email="Parteek562006@gmail.com",
+
+        linkedin="https://www.linkedin.com/in/parteek-745a7037a/",
 
         contributions=[
 

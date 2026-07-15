@@ -6,4 +6,4 @@ limiter = Limiter(
     default_limits=[]
 )
 
-API_RATE_LIMIT = "1/minute"
+API_RATE_LIMIT = "5/minute"
