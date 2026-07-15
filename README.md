@@ -1,91 +1,82 @@
-# 🚀 AI Career Coach
+# AI Career Coach
 
-> An AI-powered Career Assistant built with **FastAPI**, **Jinja2**, **Vanilla JavaScript**, and **Google Gemini 3.1 Flash Lite**.
+AI Career Coach is a web application that uses Google's Gemini models to assist with different stages of the job application process. The application currently focuses on three core tasks:
 
-AI Career Coach helps students and job seekers improve their resumes, generate professional cover letters, and prepare for interviews using Google's Gemini AI.
+- Resume analysis with ATS-style feedback
+- AI-generated cover letters
+- Interview preparation
 
----
+I built this project to learn how to integrate large language models into a production-style web application while keeping the stack simple. Instead of using a frontend framework, I chose **FastAPI**, **Jinja2**, and **Vanilla JavaScript** so I could better understand server-side rendering, routing, and backend architecture.
 
-## ✨ Features
-
-### 📄 ATS Resume Analyzer
-
-- Upload resume in PDF format
-- Extracts text using PyMuPDF
-- Performs AI-powered ATS analysis
-- Generates:
-  - Resume score
-  - Strengths
-  - Weaknesses
-  - Missing keywords
-  - Improvement suggestions
-- Download analysis as PDF
+The application is fully Dockerized and can be deployed to cloud platforms such as AWS App Runner.
 
 ---
 
-### ✉️ AI Cover Letter Generator
+## Features
 
-Generate personalized cover letters by providing:
+### Resume Analyzer
 
-- Job Description
-- Skill Set
-- Applicant Details
+Upload a PDF resume and receive detailed AI-generated feedback.
 
-Features:
+The analysis includes:
 
-- Professional formatting
-- Tailored writing
-- Download as:
-  - PDF
-  - DOCX
+- Overall ATS evaluation
+- Resume strengths
+- Areas that need improvement
+- Missing keywords
+- Suggestions to improve recruiter visibility
+
+The generated report can also be downloaded as a PDF.
 
 ---
 
-### 🎤 Interview Preparation
+### Cover Letter Generator
 
-Generate interview preparation guides for any role.
+Generate a professional cover letter by providing:
 
-Examples:
+- Job description
+- Applicant information
+- Skills and experience
+
+The generated cover letter can be downloaded as either a PDF or a Word document.
+
+---
+
+### Interview Preparation
+
+Generate interview preparation material for any role.
+
+Examples include:
 
 - Software Engineer
-- Data Analyst
 - Frontend Developer
 - Backend Developer
-- AI Engineer
+- Data Analyst
+- AI/ML Engineer
 
-The generated guide includes:
+Each generated guide contains technical topics, commonly asked interview questions, HR questions, and preparation tips.
 
-- Important topics
-- Common interview questions
-- Technical concepts
-- HR questions
-- Preparation tips
-
-Download as:
-
-- PDF
-- DOCX
+The guide can also be exported as PDF or DOCX.
 
 ---
 
-## 🏗️ Tech Stack
+## Tech Stack
 
 ### Backend
 
 - FastAPI
 - Uvicorn
-- Python 3.12
 
 ### Frontend
 
-- HTML5
-- CSS3
+- HTML
+- CSS
 - Vanilla JavaScript
 - Jinja2 Templates
 
 ### AI
 
-- Google Gemini 3.1 Flash Lite
+- Google Gemini
 - Google GenAI SDK
 
 ### Document Processing
@@ -99,33 +90,18 @@ Download as:
 
 - Docker
 - Docker Compose
-- AWS Ready
 
 ---
 
-# 📁 Project Structure
+## Project Structure
 
-```text
+```
 .
 ├── prompts/
-│   ├── ats_prompt.py
-│   ├── cover_letter_prompt.py
-│   └── interview_prep.py
-│
 ├── routers/
-│   ├── pages.py
-│   ├── resume.py
-│   ├── cover_letter.py
-│   └── interview.py
-│
 ├── services/
-│   ├── gemini_service.py
-│   ├── read_pdf_service.py
-│   ├── create_pdf_service.py
-│   └── create_docx_service.py
-│
-├── templates/
 ├── static/
+├── templates/
 ├── utils/
 │
 ├── config.py
@@ -136,85 +112,65 @@ Download as:
 └── README.md
 ```
 
+### Folder Overview
+
+| Folder | Purpose |
+|---------|----------|
+| routers | API endpoints and page routing |
+| prompts | Prompt templates sent to Gemini |
+| services | Business logic, PDF processing and AI integration |
+| templates | Jinja HTML templates |
+| static | CSS and JavaScript files |
+| utils | Shared helper functions |
+
 ---
 
-# 🧠 Architecture
+## How It Works
 
 ```
-                User
-                  │
-                  ▼
-         FastAPI Routes
-                  │
-                  ▼
-             Prompt Builder
-                  │
-                  ▼
-           Gemini AI Service
-                  │
-                  ▼
-       Generated AI Response
-                  │
-                  ▼
-     HTML / PDF / DOCX Response
+User
+   │
+   ▼
+FastAPI Router
+   │
+   ▼
+Prompt Builder
+   │
+   ▼
+Gemini Service
+   │
+   ▼
+AI Response
+   │
+   ▼
+Rendered HTML / PDF / DOCX
 ```
 
 ---
 
-# 🔥 API Endpoints
-
-## Resume Analyzer
-
-| Method | Endpoint |
-|---------|-----------|
-| POST | `/api/analyze-resume` |
-| POST | `/api/download-analysis-pdf` |
-
----
-
-## Cover Letter
-
-| Method | Endpoint |
-|---------|-----------|
-| POST | `/api/generate-letter` |
-| POST | `/api/download-pdf` |
-| POST | `/api/download-docx` |
-
----
-
-## Interview Preparation
-
-| Method | Endpoint |
-|---------|-----------|
-| POST | `/api/start-interview` |
-| POST | `/api/download-interview-pdf` |
-| POST | `/api/download-interview-docx` |
-
----
-
-# ⚙️ Installation
+## Running Locally
 
 Clone the repository
 
 ```bash
-git clone https://github.com/<username>/<repository>.git
+git clone https://github.com/<your-username>/<repository>.git
 
 cd <repository>
 ```
 
-Install dependencies
+Install the dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-Create a `.env`
+Create a `.env` file
 
 ```env
-GEMINI_API_KEY=YOUR_API_KEY
+GEMINI_API_KEY=your_api_key
 ```
 
-Run
+Run the application
 
 ```bash
 python main.py
@@ -226,7 +182,7 @@ or
 uvicorn main:app --reload
 ```
 
-Application runs at
+Open
 
 ```
 http://localhost:8080
@@ -234,159 +190,69 @@ http://localhost:8080
 
 ---
 
-# 🐳 Docker
+## Running with Docker
 
-Build
+Build the image
 
 ```bash
 docker build -t ai-career-coach .
 ```
 
-Run
+Run the container
 
 ```bash
-docker run \
---env-file .env \
--p 8080:8080 \
-ai-career-coach
+docker run --env-file .env -p 8080:8080 ai-career-coach
 ```
 
----
-
-# 🐳 Docker Compose
-
-Build & Run
+Or use Docker Compose
 
 ```bash
 docker compose up --build
 ```
 
-Stop
-
-```bash
-docker compose down
-```
-
 ---
 
-# ☁️ AWS Deployment
+## Environment Variables
 
-This project is containerized and can be deployed to:
-
-- Amazon App Runner
-- Amazon ECS
-- EC2
-- Azure Container Apps
-- Google Cloud Run
-
-Deployment workflow:
-
-```
-GitHub
-      │
-      ▼
-Docker Image
-      │
-      ▼
-Amazon ECR
-      │
-      ▼
-AWS App Runner
-      │
-      ▼
-Public HTTPS URL
-```
-
----
-
-# 🔐 Environment Variables
+Create a `.env` file in the project root.
 
 | Variable | Description |
-|------------|-------------|
-| GEMINI_API_KEY | Google Gemini API Key |
+|----------|-------------|
+| GEMINI_API_KEY | Google Gemini API key |
 
 ---
 
-# 📸 Screenshots
+## Future Improvements
 
-## Dashboard
+Some features I'd like to add in the future:
 
-> Add dashboard screenshot here
-
----
-
-## Resume Analyzer
-
-> Add screenshot
-
----
-
-## Cover Letter Generator
-
-> Add screenshot
-
----
-
-## Interview Preparation
-
-> Add screenshot
-
----
-
-# 🚀 Future Improvements
-
-- User Authentication
-- Resume History
-- Saved Projects
-- AI Chat Career Coach
-- Job Description Matching
-- Resume Keyword Highlighting
-- Multi-language Support
-- User Dashboard
-- Resume Templates
-- Dark Mode
+- User authentication
+- Resume history
+- Saved cover letters
+- Job description matching
+- Resume keyword highlighting
+- Resume scoring dashboard
+- AI career chat assistant
+- Multi-language support
+- User profiles
 - Analytics
 
 ---
 
-# 🤝 Contributing
+## Lessons Learned
 
-Contributions are welcome.
+Building this project helped me gain practical experience with:
 
-1. Fork the repository
-
-2. Create a new branch
-
-```bash
-git checkout -b feature-name
-```
-
-3. Commit
-
-```bash
-git commit -m "Added feature"
-```
-
-4. Push
-
-```bash
-git push origin feature-name
-```
-
-5. Open a Pull Request
+- FastAPI routing and project organization
+- Prompt engineering for LLM applications
+- PDF processing in Python
+- Dynamic document generation
+- Docker and containerization
+- Structuring a production-style backend
+- Deploying containerized applications
 
 ---
 
-# 📄 License
+## License
 
 This project is licensed under the MIT License.
-
----
-
-# 👨‍💻 Author
-
-**Mudit**
-
-BCA Student • AI & Backend Developer
-
-Built with ❤️ using FastAPI and Google Gemini.
