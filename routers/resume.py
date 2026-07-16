@@ -1,7 +1,7 @@
 from fastapi import APIRouter, File, UploadFile, Body, HTTPException, Request
 from fastapi.responses import StreamingResponse
 from prompts.ats_prompt import get_ats_prompt
-from services.gemini_service import generate, generate_stream
+from services.gemini_service import generate_stream
 from services.read_pdf_service import extract_text_from_pdf
 from services.create_pdf_service import create_pdf
 from middleware.rate_limiter import limiter, API_RATE_LIMIT

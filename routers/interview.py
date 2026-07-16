@@ -2,7 +2,7 @@ from fastapi import APIRouter, Form, Body, HTTPException,  Request
 from fastapi.responses import StreamingResponse
 
 from prompts.interview_prep import get_interview_prompt
-from services.gemini_service import generate, generate_stream
+from services.gemini_service import generate_stream
 from services.create_pdf_service import create_pdf
 from services.create_docx_service import create_docx
 from middleware.rate_limiter import limiter, API_RATE_LIMIT

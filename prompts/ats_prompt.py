@@ -80,4 +80,17 @@ FINAL VERDICT
 - Use bullet points beginning with "- ".
 - Put the ATS score on its own line.
 - Keep the report concise and easy to scan.
+he extraction may contain:
+
+- Missing line breaks
+- Unicode artifacts
+- Section headings merged with body text
+- Decorative symbols
+- Encoding issues
+
+Infer the intended resume structure before analyzing it.
+
+Do NOT penalize the candidate for extraction artifacts.
+
+Evaluate the resume as if those artifacts were corrected.
         """

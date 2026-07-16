@@ -3,7 +3,7 @@ from services.create_docx_service import create_docx
 from services.create_pdf_service import create_pdf
 from fastapi import (APIRouter,Form,Body,HTTPException,  Request)
 from fastapi.responses import StreamingResponse
-from services.gemini_service import generate, generate_stream
+from services.gemini_service import generate_stream
 from prompts.cover_letter_prompt import (get_cover_letter_prompt)
 from middleware.rate_limiter import limiter, API_RATE_LIMIT
 

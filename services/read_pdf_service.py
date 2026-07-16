@@ -1,5 +1,6 @@
 import pymupdf
 from fastapi import HTTPException, UploadFile
+from services.pdf_parser import parse_page
 async def extract_text_from_pdf(file: UploadFile) -> str:
     """
     Raises:
@@ -23,9 +24,16 @@ async def extract_text_from_pdf(file: UploadFile) -> str:
         )
     pages = []
     for page in document:
-        pages.append(page.get_text())
+
+        page_dict = page.get_text("dict")
+
+        pages.append(
+            parse_page(page_dict)
+        )
+
     document.close()
-    text = "\n".join(pages).strip()
+
+    text = "\n\n".join(pages).strip()
     if not text:
         raise HTTPException(
             status_code=400,
