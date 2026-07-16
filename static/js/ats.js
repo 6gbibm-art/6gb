@@ -96,13 +96,35 @@ function initResumeAnalyzer() {
                 body: formData
             });
 
-            const data = await response.json();
             hideRateLimit();
-            generatedReport = data.report;
 
             resultsContainer.className = "terminal-text results-panel";
-            resultsContainer.innerHTML =
-                generatedReport.replace(/\n/g, "<br>");
+            resultsContainer.innerHTML = "";
+
+            generatedReport = "";
+
+            const reader = response.body.getReader();
+
+            const decoder = new TextDecoder();
+
+            while (true) {
+
+                const { done, value } = await reader.read();
+
+                if (done) {
+                    break;
+                }
+
+                const chunk = decoder.decode(value, { stream: true });
+
+                generatedReport += chunk;
+
+                resultsContainer.innerHTML =
+                    generatedReport.replace(/\n/g, "<br>");
+
+                resultsContainer.scrollTop =
+                    resultsContainer.scrollHeight;
+            }
 
             actions.style.display = "flex";
 
@@ -111,21 +133,17 @@ function initResumeAnalyzer() {
         }
 
         catch (error) {
-
             if (error.message === "RATE_LIMIT") {
 
                 resultsContainer.style.display = "none";
                 analyzeBtn.innerText = "Retry Analysis";
                 return;
             }
-
             showError(
                 resultsContainer,
                 error.message
             );
-
             analyzeBtn.innerText = "Retry Analysis";
-
         }
 
         finally {
@@ -135,21 +153,17 @@ function initResumeAnalyzer() {
         }
 
     }
-
     analyzeBtn.addEventListener(
         "click",
         analyzeResume
     );
-
     regenerateBtn.addEventListener(
         "click",
         analyzeResume
     );
-
     // ============================
     // Copy
     // ============================
-
     copyBtn.addEventListener("click", () =>
     copyToClipboard(
         generatedReport,
@@ -161,27 +175,17 @@ function initResumeAnalyzer() {
     // ============================
     // PDF Download
     // ============================
-
     pdfBtn.addEventListener("click", () => {
-
     downloadFromApi(
 
         "/api/download-analysis-pdf",
-
         {
             report: generatedReport
         },
-
         "ATS_Report.pdf"
-
     );
-
     });
-
-
-
 }
-
 document.addEventListener(
     "DOMContentLoaded",
     initResumeAnalyzer
