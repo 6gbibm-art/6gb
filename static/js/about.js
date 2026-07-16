@@ -27,7 +27,23 @@ function initAboutPage() {
         document.getElementById("modal-links");
 
     if (!cards.length || !modal) return;
+    // ==========================================
+    // Preload Team Images
+    // ==========================================
 
+    const imageCache = {};
+
+    cards.forEach(card => {
+
+        const img = new Image();
+
+        img.src =
+            "/static/images/team/" +
+            card.dataset.photo;
+
+        imageCache[card.dataset.photo] = img;
+
+    });
     // ==========================================
     // Open Modal
     // ==========================================
@@ -35,8 +51,7 @@ function initAboutPage() {
     function openModal(card) {
 
         modalPhoto.src =
-            "/static/images/team/" +
-            card.dataset.photo;
+            imageCache[card.dataset.photo].src;
 
         modalPhoto.alt =
             card.dataset.name;

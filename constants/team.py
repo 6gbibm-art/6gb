@@ -28,7 +28,7 @@ TEAM_MEMBERS: list[TeamMember] = [
 
         role="Lead Frontend & Backend Development",
 
-        photo_filename="mudit.jpg",
+        photo_filename="mudit.webp",
 
         email="reachmuditdua@gmail.com",
 
@@ -56,7 +56,7 @@ TEAM_MEMBERS: list[TeamMember] = [
 
         role="Co-Lead Frontend and Backend Development",
 
-        photo_filename="ananya.jpg",
+        photo_filename="ananya.webp",
 
         email="ananya.chauhan1306@gmail.com",
 
@@ -84,7 +84,7 @@ TEAM_MEMBERS: list[TeamMember] = [
 
         role="Team Leader - Reports and AWS",
 
-        photo_filename="ramya.jpg",
+        photo_filename="ramya3.webp",
 
         email="ramyagupta7172@gmail.com",
 
@@ -107,7 +107,7 @@ TEAM_MEMBERS: list[TeamMember] = [
 
         role="Paperwork and AWS",
 
-        photo_filename="vidhi.jpg",
+        photo_filename="vidhi.webp",
 
         email="kapoorvidhi6@gmail.com",
 
@@ -115,7 +115,7 @@ TEAM_MEMBERS: list[TeamMember] = [
 
         contributions=[
 
-            "Designed dashboard UI",
+            "PRD Documentation",
 
             "Built responsive layouts",
 
@@ -132,7 +132,7 @@ TEAM_MEMBERS: list[TeamMember] = [
 
         role="Paperwork and AWS",
 
-        photo_filename="yogus.jpg",
+        photo_filename="yogus2.webp",
 
         email="yoguswadhwa@gmail.com",
 
@@ -157,7 +157,7 @@ TEAM_MEMBERS: list[TeamMember] = [
 
         role="Paperwork and AWS",
 
-        photo_filename="prateek.jpg",
+        photo_filename="prateek.webp",
 
         email="Parteek562006@gmail.com",
 
