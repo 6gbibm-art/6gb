@@ -70,7 +70,7 @@
         cursor: pointer;
         transition: all 0.3s ease;
         border-radius: 4px;
-        font-size: 1.3rem;
+        font-size: 1.1rem;
         font-weight : 900;
         display: inline-block; /* Ensures padding works correctly on links */
     }
@@ -849,22 +849,28 @@
    MOBILE NAVIGATION
 ===================================================== */
 
-.menu-toggle {
+.menu-toggle{
+    position:absolute;
+    left:16px;
+    top:50%;
+    transform:translateY(-50%);
 
-    display: none;
+    width:40px;
+    height:40px;
 
-    background: none;
+    display:flex;
+    align-items:center;
+    justify-content:center;
 
-    border: none;
+    background:transparent;
+    border:none;
 
-    color: var(--text-primary);
+    color:white;
+    font-size:28px;
+    cursor:pointer;
 
-    font-size: 2rem;
-
-    cursor: pointer;
-
+    z-index:2000;
 }
-
 /* Hide mobile components on desktop */
 
 #mobile-nav,
@@ -890,15 +896,33 @@
 
         display:block;
 
+        position:absolute;
+
+        left:1rem;
+
+        top:50%;
+
+        transform:translateY(-50%);
+
     }
-    header button.ham{
-        display: flex;
-        justify-content: flex-start;
-        position: absolute;
-    }
-    header .logo{
+
+    header{
+
+        position:relative;
+
         display:flex;
-        justify-content: center;
+
+        justify-content:center;
+
+        align-items:center;
+
+        padding:1rem 1.25rem;
+
+    }
+    
+    header .logo{
+        margin:0 auto;
+        text-align: center;
     }
 
     /* -----------------------------
