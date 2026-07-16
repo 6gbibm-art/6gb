@@ -12,21 +12,86 @@
 <body>
 
     <header class="glass-panel">
-        <a href="/dashboard" class="logo">
-    Nextstep AI
+        <button style="text-align: left;"
+        id="menu-toggle"
+        class="menu-toggle">
+        
+        ☰
+
+    </button class="ham">
+    <a href="/dashboard" class="logo">
+        Nextstep AI
+    </a>
+
+    <!-- Desktop Navigation -->
+
+    <nav class="desktop-nav">
+
+        <a href="/dashboard" class="nav-btn {% if active_page == 'dashboard' %}active{% endif %}">
+            Home
         </a>
-        <nav>
-            <a href="/dashboard" class="nav-btn {% if active_page == 'dashboard' %}active{% endif %}">Home</a>
-            <a href="/resume" class="nav-btn {% if active_page == 'resume' %}active{% endif %}">ATS Analyzer</a>
-            <a href="/cover-letter" class="nav-btn {% if active_page == 'cover-letter' %}active{% endif %}">Cover Letters</a>
-            <a href="/interview-prep" class="nav-btn {% if active_page == 'interview-prep' %}active{% endif %}">Interview Prep</a>
-            <a href="/about" class="nav-btn {% if active_page == 'about' %}active{% endif %}">About 6GB</a>
-        </nav>
-    </header>
+
+        <a href="/resume" class="nav-btn {% if active_page == 'resume' %}active{% endif %}">
+            ATS Analyzer
+        </a>
+
+        <a href="/cover-letter" class="nav-btn {% if active_page == 'cover-letter' %}active{% endif %}">
+            Cover Letters
+        </a>
+
+        <a href="/interview-prep" class="nav-btn {% if active_page == 'interview-prep' %}active{% endif %}">
+            Interview Prep
+        </a>
+
+        <a href="/about" class="nav-btn {% if active_page == 'about' %}active{% endif %}">
+            About 6GB
+        </a>
+
+    </nav>
+
+    <!-- Mobile Hamburger -->
+
+
+
+</header>
+
+<!-- Overlay -->
+
+<div id="nav-overlay"></div>
+
+<!-- Mobile Drawer -->
+
+<nav id="mobile-nav">
+
+    <div class="drawer-header">
+
+        <h2>Nextstep AI</h2>
+
+        <button
+            id="close-menu">
+
+            ✕
+
+        </button>
+
+    </div>
+
+    <a href="/dashboard">Home</a>
+
+    <a href="/resume">ATS Analyzer</a>
+
+    <a href="/cover-letter">Cover Letters</a>
+
+    <a href="/interview-prep">Interview Prep</a>
+
+    <a href="/about">About 6GB</a>
+
+</nav>
 
     <main class="container">
         {% block main %}{% endblock %}
     </main>
+<script src="/static/js/navbar.js"></script>
 {% block scripts %}{% endblock %}
 </body>
 </html>
