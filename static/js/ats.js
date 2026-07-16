@@ -117,10 +117,21 @@ function initResumeAnalyzer() {
 
                 const chunk = decoder.decode(value, { stream: true });
 
-                generatedReport += chunk;
+                for (const char of chunk) {
 
-                resultsContainer.innerHTML =
-                    generatedReport.replace(/\n/g, "<br>");
+                    generatedReport += char;
+
+                    resultsContainer.innerHTML =
+                        generatedReport.replace(/\n/g, "<br>");
+
+                    resultsContainer.scrollTop =
+                        resultsContainer.scrollHeight;
+
+                    await new Promise(resolve =>
+                        setTimeout(resolve, 1)
+                    );
+
+                }
 
                 resultsContainer.scrollTop =
                     resultsContainer.scrollHeight;

@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Form, Body, HTTPException,  Request
-from fastapi.responses import JSONResponse
+from fastapi.responses import StreamingResponse
 
 from prompts.interview_prep import get_interview_prompt
-from services.gemini_service import generate
+from services.gemini_service import generate, generate_stream
 from services.create_pdf_service import create_pdf
 from services.create_docx_service import create_docx
 from middleware.rate_limiter import limiter, API_RATE_LIMIT
@@ -16,11 +16,16 @@ async def start_interview(request: Request, role_title: str = Form(...)):
     try:
         prompt = get_interview_prompt(role_title)
 
-        guide = generate(prompt)
+        def stream():
 
-        return JSONResponse({
-            "guide": guide
-        })
+            for chunk in generate_stream(prompt):
+
+                yield chunk.encode("utf-8")
+
+        return StreamingResponse(
+            stream(),
+            media_type="text/plain"
+        )
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

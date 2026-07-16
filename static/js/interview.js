@@ -46,17 +46,54 @@ function initInterviewPrep() {
 
         try {
 
-            const response = await apiFetch("/api/start-interview", {
-                method: "POST",
-                body: formData
-            });
+            const response = await apiFetch(
+                "/api/start-interview",
+                {
+                    method: "POST",
+                    body: formData
+                }
+            );
 
-            const data = await response.json();
             hideRateLimit();
-            generatedGuide = data.guide;
 
-            results.innerHTML =
-                generatedGuide.replace(/\n/g, "<br>");
+            generatedGuide = "";
+
+            results.className = "terminal-text results-panel";
+            results.innerHTML = "";
+
+            const reader = response.body.getReader();
+
+            const decoder = new TextDecoder();
+
+            while (true) {
+
+                const { done, value } = await reader.read();
+
+                if (done) break;
+
+                const chunk = decoder.decode(
+                    value,
+                    { stream: true }
+                );
+
+                // Character-by-character typewriter effect
+                for (const char of chunk) {
+
+                    generatedGuide += char;
+
+                    results.innerHTML =
+                        generatedGuide.replace(/\n/g, "<br>");
+
+                    results.scrollTop =
+                        results.scrollHeight;
+
+                    await new Promise(resolve =>
+                        setTimeout(resolve, 1)
+                    );
+
+                }
+
+            }
 
             actions.style.display = "flex";
 

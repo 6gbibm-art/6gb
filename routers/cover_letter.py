@@ -2,8 +2,8 @@ import json
 from services.create_docx_service import create_docx
 from services.create_pdf_service import create_pdf
 from fastapi import (APIRouter,Form,Body,HTTPException,  Request)
-from fastapi.responses import JSONResponse
-from services.gemini_service import generate
+from fastapi.responses import StreamingResponse
+from services.gemini_service import generate, generate_stream
 from prompts.cover_letter_prompt import (get_cover_letter_prompt)
 from middleware.rate_limiter import limiter, API_RATE_LIMIT
 
@@ -20,10 +20,16 @@ async def generate_cover_letter(
     try:
         details = json.loads(applicant_details)
         prompt = get_cover_letter_prompt(job_description, skill_set, details)
-        letter = generate(prompt)
-        return JSONResponse({
-            "letter" : letter
-        })
+        def stream():
+
+            for chunk in generate_stream(prompt):
+
+                yield chunk.encode("utf-8")
+
+        return StreamingResponse(
+            stream(),
+            media_type="text/plain"
+        )
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

@@ -132,14 +132,46 @@ function initCoverLetterGenerator() {
                 }
             );
 
-            const data = await response.json();
-
             hideRateLimit();
 
-            generatedLetter = data.letter;
+            generatedLetter = "";
 
-            results.innerHTML =
-                generatedLetter.replace(/\n/g, "<br>");
+            results.className = "terminal-text results-panel";
+            results.innerHTML = "";
+
+            const reader = response.body.getReader();
+
+            const decoder = new TextDecoder();
+
+            while (true) {
+
+                const { done, value } = await reader.read();
+
+                if (done) break;
+
+                const chunk = decoder.decode(
+                    value,
+                    { stream: true }
+                );
+
+                // Typewriter effect
+                for (const char of chunk) {
+
+                    generatedLetter += char;
+
+                    results.innerHTML =
+                        generatedLetter.replace(/\n/g, "<br>");
+
+                    results.scrollTop =
+                        results.scrollHeight;
+
+                    await new Promise(resolve =>
+                        setTimeout(resolve, 1)
+                    );
+
+                }
+
+            }
 
             actions.style.display = "flex";
 

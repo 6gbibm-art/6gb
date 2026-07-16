@@ -82,7 +82,7 @@ TEAM_MEMBERS: list[TeamMember] = [
 
         name="Ramya Gupta",
 
-        role="Team Leader - Reports and AWS",
+        role="Team Leader - Reports",
 
         photo_filename="ramya3.webp",
 
@@ -105,7 +105,7 @@ TEAM_MEMBERS: list[TeamMember] = [
 
         name="Vidhi Kapoor",
 
-        role="Paperwork and AWS",
+        role="Reports and Documentation",
 
         photo_filename="vidhi.webp",
 
@@ -130,7 +130,7 @@ TEAM_MEMBERS: list[TeamMember] = [
 
         name="Yogus Wadhwa",
 
-        role="Paperwork and AWS",
+        role="Vella behta rha kuch nahi kara mein project ka naam bhi ni pata",
 
         photo_filename="yogus2.webp",
 
@@ -140,13 +140,7 @@ TEAM_MEMBERS: list[TeamMember] = [
 
         contributions=[
 
-            "Designed dashboard UI",
-
-            "Built responsive layouts",
-
-            "Implemented animations",
-
-            "Improved accessibility"
+            "Nothing"
 
         ]
 
