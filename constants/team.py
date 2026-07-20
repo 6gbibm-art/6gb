@@ -39,11 +39,11 @@ TEAM_MEMBERS: list[TeamMember] = [
 
         "Designed the FastAPI backend architecture",
 
-        "Refactored the project into a modular production-style structure",
+        "Developed the core frontend and backend application",
 
-        "Integrated Gemini AI and implemented streaming responses",
+        "Integrated Gemini AI and implemented streaming responses (SSE)",
 
-        "Developed core frontend pages and application features"
+        "Assisted with Docker containerization"
 
     ]
 
@@ -67,11 +67,11 @@ TEAM_MEMBERS: list[TeamMember] = [
 
         "Built the initial project prototype and application foundation",
 
-        "Co-developed frontend interfaces and user experience",
+        "Co-developed the frontend interface and assisted in backend implementation",
 
-        "Assisted in backend implementation and feature integration",
+        "Prepared the project concept note",
 
-        "Collaborated on UI refinement, testing, and iterative improvements"
+        "Managed Docker deployment and AWS cloud deployment"
 
     ]
 
@@ -81,7 +81,7 @@ TEAM_MEMBERS: list[TeamMember] = [
 
         name="Ramya Gupta",
 
-        role="Team Leader - Reports",
+        role="Team Leader",
 
         photo_filename="ramya3.webp",
 
@@ -91,12 +91,9 @@ TEAM_MEMBERS: list[TeamMember] = [
 
         contributions=[
 
-            "Lead the team",
+        "Coordinated team communication and task allocation",
 
-            "Managing roles",
-
-            "Setup AWS",
-
+        "Managed project planning and submission activities"
         ]
 
     ),
@@ -104,7 +101,7 @@ TEAM_MEMBERS: list[TeamMember] = [
 
         name="Vidhi Kapoor",
 
-        role="Reports and Documentation",
+        role="Project Member",
 
         photo_filename="vidhi.webp",
 
@@ -114,13 +111,9 @@ TEAM_MEMBERS: list[TeamMember] = [
 
         contributions=[
 
-            "PRD Documentation",
+            "Co-authored the final project report",
 
-            "Built responsive layouts",
-
-            "Implemented animations",
-
-            "Improved accessibility"
+            "Assisted with project documentation"
 
         ]
 
@@ -138,7 +131,7 @@ TEAM_MEMBERS: list[TeamMember] = [
 
         contributions=[
 
-            "Unable to Retrive Information"
+            "⚠ Error retrieving contribution data."
 
         ]
 
@@ -147,7 +140,7 @@ TEAM_MEMBERS: list[TeamMember] = [
 
         name="Prateek",
 
-        role="Paperwork and AWS",
+        role="Project Member",
 
         photo_filename="prateek.webp",
 
@@ -157,13 +150,8 @@ TEAM_MEMBERS: list[TeamMember] = [
 
         contributions=[
 
-            "Designed dashboard UI",
-
-            "Built responsive layouts",
-
-            "Implemented animations",
-
-            "Improved accessibility"
+            "Co-authored the final project report",
+            "Prepared project documentation for submission"
 
         ]
 
