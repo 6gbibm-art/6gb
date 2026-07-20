@@ -412,8 +412,6 @@ def parse_page(page_dict):
     merged = merge_paragraphs(elements)
 
     markdown = render_markdown(merged)
-    with open("parsed_resume.md", "w", encoding="utf-8") as f:
-        f.write(markdown)
     return clean_markdown(markdown)
 
 def clean_markdown(markdown: str) -> str:

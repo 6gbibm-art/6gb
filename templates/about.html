@@ -54,10 +54,8 @@
 
                 <h3>{{ member.name }}</h3>
 
-                <p class="member-role">
-
+                <p class="member-role{% if member.name == 'Yogus Wadhwa' %} error-text{% endif %}">
                     {{ member.role }}
-
                 </p>
 
             </div>

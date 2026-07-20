@@ -2,6 +2,8 @@ function initAboutPage() {
 
     console.log("About page initialized");
 
+
+
     const cards =
         document.querySelectorAll(".team-card");
 
@@ -32,7 +34,7 @@ function initAboutPage() {
     // ==========================================
 
     const imageCache = {};
-
+    
     cards.forEach(card => {
 
         const img = new Image();
@@ -61,7 +63,7 @@ function initAboutPage() {
 
         modalRole.textContent =
             card.dataset.role;
-
+        
         // ==========================
         // Contributions
         // ==========================
@@ -70,13 +72,27 @@ function initAboutPage() {
 
         const contributions =
             JSON.parse(card.dataset.contributions);
-
+        const hasUnavailableData =
+            card.dataset.role.trim().toUpperCase() === "N/A" ||
+            contributions.some(text =>
+                text.toLowerCase().includes("unable")
+            );
+        modalRole.textContent =
+            card.dataset.role;
+        modalRole.classList.toggle(
+            "error-text",
+            hasUnavailableData
+        );
         contributions.forEach(item => {
 
             const li =
                 document.createElement("li");
 
             li.textContent = item;
+            li.classList.toggle(
+                "error-text",
+                hasUnavailableData
+            );
 
             modalContributions.appendChild(li);
 
@@ -199,8 +215,6 @@ function initAboutPage() {
         }
 
         modal.classList.add("show");
-
-        document.body.style.overflow = "hidden";
 
     }
 

@@ -128,7 +128,7 @@ function initResumeAnalyzer() {
                         resultsContainer.scrollHeight;
 
                     await new Promise(resolve =>
-                        setTimeout(resolve, 1)
+                        setTimeout(resolve, 0.2)
                     );
 
                 }

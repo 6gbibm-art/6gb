@@ -2,7 +2,6 @@ from pydantic import BaseModel, EmailStr, HttpUrl
 
 
 class TeamMember(BaseModel):
-
     name: str
 
     role: str
@@ -26,7 +25,7 @@ TEAM_MEMBERS: list[TeamMember] = [
 
         name="Mudit Dua",
 
-        role="Lead Frontend & Backend Development",
+        role="Lead Backend & Frontend Development",
 
         photo_filename="mudit.webp",
 
@@ -38,15 +37,15 @@ TEAM_MEMBERS: list[TeamMember] = [
 
         contributions=[
 
-            "Designed FastAPI backend",
+        "Designed the FastAPI backend architecture",
 
-            "Integrated Gemini AI",
+        "Refactored the project into a modular production-style structure",
 
-            "Developed ATS Resume Analyzer",
+        "Integrated Gemini AI and implemented streaming responses",
 
-            "Designed project architecture",
+        "Developed core frontend pages and application features"
 
-        ]
+    ]
 
     ),
 
@@ -66,15 +65,15 @@ TEAM_MEMBERS: list[TeamMember] = [
 
         contributions=[
 
-            "Designed dashboard UI",
+        "Built the initial project prototype and application foundation",
 
-            "Built responsive layouts",
+        "Co-developed frontend interfaces and user experience",
 
-            "Implemented animations",
+        "Assisted in backend implementation and feature integration",
 
-            "Improved accessibility"
+        "Collaborated on UI refinement, testing, and iterative improvements"
 
-        ]
+    ]
 
     ),
 
@@ -127,12 +126,11 @@ TEAM_MEMBERS: list[TeamMember] = [
 
     ),
     TeamMember(
-
         name="Yogus Wadhwa",
 
-        role="Vella behta rha kuch nahi kara mein project ka naam bhi ni pata",
+        role="N/A",
 
-        photo_filename="yogus2.webp",
+        photo_filename="yogus3.webp",
 
         email="yoguswadhwa@gmail.com",
 
@@ -140,7 +138,7 @@ TEAM_MEMBERS: list[TeamMember] = [
 
         contributions=[
 
-            "Nothing"
+            "Unable to Retrive Information"
 
         ]
 
